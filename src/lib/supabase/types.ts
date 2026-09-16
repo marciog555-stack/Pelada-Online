@@ -109,6 +109,51 @@ export type Database = {
           },
         ]
       }
+      edition_awards: {
+        Row: {
+          athlete_name: string | null
+          award_type: string
+          created_at: string
+          edition_id: string
+          id: string
+          participant_id: string
+          value: number | null
+        }
+        Insert: {
+          athlete_name?: string | null
+          award_type: string
+          created_at?: string
+          edition_id: string
+          id?: string
+          participant_id: string
+          value?: number | null
+        }
+        Update: {
+          athlete_name?: string | null
+          award_type?: string
+          created_at?: string
+          edition_id?: string
+          id?: string
+          participant_id?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edition_awards_edition_id_fkey"
+            columns: ["edition_id"]
+            isOneToOne: false
+            referencedRelation: "editions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edition_awards_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       edition_participants: {
         Row: {
           created_at: string
@@ -651,6 +696,10 @@ export type Database = {
         }
       }
       auto_confirm_overdue_matches: { Args: never; Returns: undefined }
+      close_edition: {
+        Args: { p_awards: Json; p_edition_id: string; p_final_positions: Json }
+        Returns: undefined
+      }
       confirm_match_report: {
         Args: { p_match_id: string }
         Returns: {

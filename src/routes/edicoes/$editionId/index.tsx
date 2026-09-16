@@ -13,6 +13,7 @@ import {
   useEditionMatchEvents,
   useEditionRealtime,
   useCrestChangeRequests,
+  useEditionAwards,
   useInvalidateEdition,
 } from '#/hooks/use-competitions'
 import { joinEdition } from '#/lib/competitions/api'
@@ -25,6 +26,8 @@ import { CrestChangeRequestsPanel } from '#/components/competitions/crest-change
 import { StandingsTable } from '#/components/competitions/standings-table'
 import { PlayerStatsPanel } from '#/components/competitions/player-stats-panel'
 import { EditionScorersList } from '#/components/competitions/edition-scorers-list'
+import { CloseEditionButton } from '#/components/competitions/close-edition-button'
+import { EditionAwardsPanel } from '#/components/competitions/edition-awards-panel'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
 
@@ -49,6 +52,7 @@ function EdicaoContent() {
   const { data: matches, isLoading: loadingMatches } = useEditionMatches(editionId)
   const { data: events } = useEditionMatchEvents(editionId)
   const { data: crestRequests } = useCrestChangeRequests(editionId)
+  const { data: awards } = useEditionAwards(editionId)
   const invalidate = useInvalidateEdition(editionId)
   useEditionRealtime(editionId)
 
@@ -107,8 +111,24 @@ function EdicaoContent() {
           </>
         ) : (
           <>
+            {edition.status === 'completed' && awards && awards.length > 0 && (
+              <EditionAwardsPanel awards={awards} />
+            )}
+
             {isAdmin && crestRequests && crestRequests.length > 0 && user && (
               <CrestChangeRequestsPanel requests={crestRequests} adminId={user.id} onChanged={invalidate} />
+            )}
+
+            {isAdmin && edition.status === 'in_progress' && matches && preset && (
+              <CloseEditionButton
+                editionId={editionId}
+                isKnockout={isKnockout}
+                participantIds={Array.from(participantMap.keys())}
+                matches={matches}
+                events={events ?? []}
+                preset={preset}
+                onClosed={invalidate}
+              />
             )}
 
             <Tabs defaultValue="jogos">

@@ -270,3 +270,24 @@ export async function applyMatchWo(matchId: string, winnerParticipantId: string)
   if (error) throw error
   return data
 }
+
+export async function closeEdition(
+  editionId: string,
+  finalPositions: { participantId: string; finalPosition: number }[],
+  awards: { awardType: string; participantId: string; athleteName?: string; value?: number }[],
+) {
+  const { error } = await supabase.rpc('close_edition', {
+    p_edition_id: editionId,
+    p_final_positions: finalPositions.map((p) => ({
+      participant_id: p.participantId,
+      final_position: p.finalPosition,
+    })),
+    p_awards: awards.map((a) => ({
+      award_type: a.awardType,
+      participant_id: a.participantId,
+      athlete_name: a.athleteName ?? null,
+      value: a.value ?? null,
+    })),
+  })
+  if (error) throw error
+}

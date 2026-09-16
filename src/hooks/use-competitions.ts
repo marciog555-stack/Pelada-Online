@@ -11,6 +11,7 @@ export type Match = Tables<'matches'>
 export type MatchReport = Tables<'match_reports'>
 export type MatchEvent = Tables<'match_events'>
 export type CrestChangeRequest = Tables<'crest_change_requests'>
+export type EditionAward = Tables<'edition_awards'>
 
 export function useLeagueCompetitions(leagueId: string | undefined) {
   return useQuery({
@@ -213,6 +214,41 @@ export function useMatchEvents(matchId: string | undefined) {
   })
 }
 
+export function useEditionAwards(editionId: string | undefined) {
+  return useQuery({
+    queryKey: ['edition-awards', editionId],
+    enabled: !!editionId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('edition_awards')
+        .select('*, participant:edition_participants(id, team_name, crest_url)')
+        .eq('edition_id', editionId!)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function useLeagueChampions(leagueId: string | undefined) {
+  return useQuery({
+    queryKey: ['league-champions', leagueId],
+    enabled: !!leagueId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('editions')
+        .select(
+          '*, competition:competitions!inner(id, name, preset_id, league_id), champion:edition_participants!inner(id, team_name, crest_url, profile:profiles(id, display_name, efootball_id))',
+        )
+        .eq('competition.league_id', leagueId!)
+        .eq('status', 'completed')
+        .eq('champion.final_position', 1)
+        .order('completed_at', { ascending: false })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
 export function useCrestChangeRequests(editionId: string | undefined) {
   return useQuery({
     queryKey: ['crest-requests', editionId],
@@ -243,6 +279,7 @@ export function useInvalidateEdition(editionId: string | undefined) {
     queryClient.invalidateQueries({ queryKey: ['edition-matches', editionId] })
     queryClient.invalidateQueries({ queryKey: ['edition-match-events', editionId] })
     queryClient.invalidateQueries({ queryKey: ['crest-requests', editionId] })
+    queryClient.invalidateQueries({ queryKey: ['edition-awards', editionId] })
   }
 }
 

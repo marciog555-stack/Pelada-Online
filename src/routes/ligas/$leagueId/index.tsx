@@ -5,12 +5,13 @@ import { AppHeader } from '#/components/layout/app-header'
 import { BottomNav } from '#/components/layout/bottom-nav'
 import { useAuth } from '#/lib/auth/auth-provider'
 import { useLeague, useLeagueMembers, useMyMembership, useInvalidateLeague } from '#/hooks/use-leagues'
-import { useLeagueCompetitions } from '#/hooks/use-competitions'
+import { useLeagueCompetitions, useLeagueChampions } from '#/hooks/use-competitions'
 import { useLeaguePlayerStats, useLeagueTopScorers } from '#/hooks/use-league-stats'
 import { MembersList } from '#/components/leagues/members-list'
 import { CompetitionCard } from '#/components/competitions/competition-card'
 import { LeagueRankingPanel } from '#/components/leagues/league-ranking-panel'
 import { LeagueTopScorersPanel } from '#/components/leagues/league-top-scorers-panel'
+import { TrophyRoomList } from '#/components/leagues/trophy-room-list'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
@@ -32,6 +33,7 @@ function LigaContent() {
   const { data: membership, isLoading: loadingMembership } = useMyMembership(leagueId)
   const { data: members, isLoading: loadingMembers } = useLeagueMembers(leagueId)
   const { data: competitions, isLoading: loadingCompetitions } = useLeagueCompetitions(leagueId)
+  const { data: champions, isLoading: loadingChampions } = useLeagueChampions(leagueId)
   const { data: playerStats, isLoading: loadingPlayerStats } = useLeaguePlayerStats(leagueId)
   const { data: topScorers, isLoading: loadingTopScorers } = useLeagueTopScorers(leagueId)
   const invalidate = useInvalidateLeague(leagueId)
@@ -122,7 +124,11 @@ function LigaContent() {
           </TabsContent>
 
           <TabsContent value="campeoes" className="pt-4">
-            <EmptyState text="A galeria de campeões aparece aqui quando a primeira edição terminar." />
+            {loadingChampions || !champions ? (
+              <Skeleton className="h-24 w-full rounded-xl" />
+            ) : (
+              <TrophyRoomList editions={champions} />
+            )}
           </TabsContent>
 
           <TabsContent value="estatisticas" className="grid gap-4 pt-4">

@@ -47,7 +47,7 @@ export function MatchList({
   const lastRound = rounds[rounds.length - 1]
   const lastRoundMatches = matches.filter((m) => m.round === lastRound)
   const lastRoundDone = lastRoundMatches.every((m) => m.status === 'confirmed' || m.status === 'wo')
-  const champion = lastRoundMatches.length === 1 && lastRoundDone ? lastRoundMatches[0] : null
+  const champion = isKnockout && lastRoundMatches.length === 1 && lastRoundDone ? lastRoundMatches[0] : null
 
   async function handleAdvance() {
     setBusy(true)
