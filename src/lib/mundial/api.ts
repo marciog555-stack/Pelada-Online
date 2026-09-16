@@ -59,19 +59,28 @@ function shuffle<T>(items: T[]): T[] {
   return arr
 }
 
-// O sorteio em si (a ordem aleatória) acontece aqui, no momento em que o
-// admin confirma - a Etapa 9 só vai encenar a revelação dessa mesma
-// ordem com animação, sem mudar como ela é decidida.
-export async function drawMundialBracket(mundialId: string, confirmedSlotIds: string[]) {
-  const seedOrder = shuffle(confirmedSlotIds)
+// O sorteio em si (a ordem aleatória que decide os confrontos) é só isso
+// aqui: puro, sem I/O. A cerimônia ao vivo (MundialDrawCeremony) chama
+// essa função pra saber a ordem, encena a revelação time a time nessa
+// mesma ordem, e só grava no banco (commitMundialDraw) depois que a
+// animação termina e o admin confirma.
+export function computeMundialDraw(confirmedSlotIds: string[]): string[] {
+  return shuffle(confirmedSlotIds)
+}
 
-  for (let i = 0; i < seedOrder.length; i++) {
-    const { error } = await supabase
-      .from('mundial_slots')
-      .update({ seed: i + 1 })
-      .eq('id', seedOrder[i])
-    if (error) throw error
-  }
+// Grava o resultado de um sorteio já decidido (seedOrder na ordem 1..N).
+// generateFirstRoundPairings é determinístico pra uma mesma ordem, então
+// recalcular os pareamentos aqui a partir do seedOrder é garantidamente
+// o mesmo que a cerimônia mostrou na tela - uma fonte de verdade só.
+export async function commitMundialDraw(mundialId: string, seedOrder: string[]) {
+  // Em paralelo: cada linha recebe um seed diferente, então não dá pra
+  // fazer num update em lote só (o PostgREST aplicaria o mesmo valor pra
+  // todas). Sequencial escalaria mal pra mundiais grandes.
+  const results = await Promise.all(
+    seedOrder.map((slotId, index) => supabase.from('mundial_slots').update({ seed: index + 1 }).eq('id', slotId)),
+  )
+  const failed = results.find((r) => r.error)
+  if (failed?.error) throw failed.error
 
   const pairings = generateFirstRoundPairings(seedOrder)
   const now = new Date().toISOString()

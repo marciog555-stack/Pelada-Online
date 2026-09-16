@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { RequireAuth } from '#/components/auth/require-auth'
 import { AppHeader } from '#/components/layout/app-header'
@@ -12,6 +13,8 @@ import {
 import { useIsPlatformAdmin } from '#/hooks/use-seasons'
 import { EligibleChampionsList } from '#/components/mundial/eligible-champions-list'
 import { MundialSlotsPanel } from '#/components/mundial/mundial-slots-panel'
+import type { SlotWithJoins } from '#/components/mundial/mundial-slots-panel'
+import { MundialDrawCeremony } from '#/components/mundial/mundial-draw-ceremony'
 import { MundialBracket } from '#/components/mundial/mundial-bracket'
 import { Badge } from '#/components/ui/badge'
 import { Skeleton } from '#/components/ui/skeleton'
@@ -40,6 +43,7 @@ function MundialContent() {
   const { data: matches, isLoading: loadingMatches } = useMundialMatches(mundialId)
   const { data: isAdmin } = useIsPlatformAdmin()
   const invalidate = useInvalidateMundial(mundialId)
+  const [drawSlots, setDrawSlots] = useState<SlotWithJoins[] | null>(null)
 
   if (loadingMundial || !mundial) {
     return (
@@ -57,7 +61,17 @@ function MundialContent() {
           {STATUS_LABELS[mundial.status]}
         </Badge>
 
-        {mundial.status === 'open' ? (
+        {mundial.status === 'open' && drawSlots ? (
+          <MundialDrawCeremony
+            mundialId={mundialId}
+            slots={drawSlots}
+            onCommitted={() => {
+              setDrawSlots(null)
+              invalidate()
+            }}
+            onCancel={() => setDrawSlots(null)}
+          />
+        ) : mundial.status === 'open' ? (
           <>
             {loadingEligible || !eligible ? (
               <Skeleton className="h-24 w-full rounded-xl" />
@@ -73,7 +87,13 @@ function MundialContent() {
             {loadingSlots || !slots ? (
               <Skeleton className="h-24 w-full rounded-xl" />
             ) : (
-              <MundialSlotsPanel mundial={mundial} slots={slots} isAdmin={!!isAdmin} onChanged={invalidate} />
+              <MundialSlotsPanel
+                mundial={mundial}
+                slots={slots}
+                isAdmin={!!isAdmin}
+                onChanged={invalidate}
+                onStartDraw={setDrawSlots}
+              />
             )}
           </>
         ) : loadingMatches || !matches ? (

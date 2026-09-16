@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Check, Trash2 } from 'lucide-react'
-import { setSlotConfirmed, removeMundialSlot, drawMundialBracket } from '#/lib/mundial/api'
+import { setSlotConfirmed, removeMundialSlot } from '#/lib/mundial/api'
 import { Button } from '#/components/ui/button'
 import { Badge } from '#/components/ui/badge'
 import { Alert, AlertDescription } from '#/components/ui/alert'
 import type { Mundial, MundialSlot } from '#/hooks/use-mundial'
 
-type SlotWithJoins = MundialSlot & {
+export type SlotWithJoins = MundialSlot & {
   league: { id: string; name: string } | null
   profile: { id: string; display_name: string; efootball_id: string } | null
 }
@@ -16,14 +16,15 @@ export function MundialSlotsPanel({
   slots,
   isAdmin,
   onChanged,
+  onStartDraw,
 }: {
   mundial: Mundial
   slots: SlotWithJoins[]
   isAdmin: boolean
   onChanged: () => void
+  onStartDraw: (confirmed: SlotWithJoins[]) => void
 }) {
   const [busyId, setBusyId] = useState<string | null>(null)
-  const [drawing, setDrawing] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const confirmed = slots.filter((s) => s.confirmed)
@@ -47,22 +48,6 @@ export function MundialSlotsPanel({
       onChanged()
     } finally {
       setBusyId(null)
-    }
-  }
-
-  async function handleDraw() {
-    setDrawing(true)
-    setError(null)
-    try {
-      await drawMundialBracket(
-        mundial.id,
-        confirmed.map((s) => s.id),
-      )
-      onChanged()
-    } catch {
-      setError('Não foi possível sortear a chave. Tente de novo.')
-    } finally {
-      setDrawing(false)
     }
   }
 
@@ -118,8 +103,8 @@ export function MundialSlotsPanel({
       )}
 
       {isAdmin && mundial.status === 'open' && (
-        <Button onClick={handleDraw} disabled={drawing || confirmed.length < 2}>
-          {drawing ? 'Sorteando…' : `Sortear chave e começar (${confirmed.length} confirmados)`}
+        <Button onClick={() => onStartDraw(confirmed)} disabled={confirmed.length < 2}>
+          Sortear chave ao vivo ({confirmed.length} confirmados)
         </Button>
       )}
       {isAdmin && mundial.status === 'open' && confirmed.length < 2 && (
