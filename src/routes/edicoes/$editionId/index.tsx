@@ -10,15 +10,23 @@ import {
   useEditionParticipants,
   useMyEditionParticipant,
   useEditionMatches,
+  useEditionMatchEvents,
+  useEditionRealtime,
   useCrestChangeRequests,
   useInvalidateEdition,
 } from '#/hooks/use-competitions'
 import { joinEdition } from '#/lib/competitions/api'
+import { builtInPresets } from '#/lib/competition-engine'
+import { computeEditionStandings } from '#/lib/competitions/stats'
 import { EditionParticipantsPanel } from '#/components/competitions/edition-participants-panel'
 import { JoinEditionForm } from '#/components/competitions/join-edition-form'
 import { MatchList } from '#/components/competitions/match-list'
 import { CrestChangeRequestsPanel } from '#/components/competitions/crest-change-requests-panel'
+import { StandingsTable } from '#/components/competitions/standings-table'
+import { PlayerStatsPanel } from '#/components/competitions/player-stats-panel'
+import { EditionScorersList } from '#/components/competitions/edition-scorers-list'
 import { Skeleton } from '#/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
 
 export const Route = createFileRoute('/edicoes/$editionId/')({ component: EdicaoPage })
 
@@ -39,8 +47,10 @@ function EdicaoContent() {
   const { data: participants, isLoading: loadingParticipants } = useEditionParticipants(editionId)
   const { data: myParticipant } = useMyEditionParticipant(editionId)
   const { data: matches, isLoading: loadingMatches } = useEditionMatches(editionId)
+  const { data: events } = useEditionMatchEvents(editionId)
   const { data: crestRequests } = useCrestChangeRequests(editionId)
   const invalidate = useInvalidateEdition(editionId)
+  useEditionRealtime(editionId)
 
   const isAdmin = membership?.role === 'owner' || membership?.role === 'admin'
 
@@ -53,6 +63,19 @@ function EdicaoContent() {
   }
 
   const isKnockout = competition.preset_id === 'mata-mata-simples'
+  const preset = builtInPresets.find((p) => p.id === competition.preset_id)
+  const participantMap = new Map((participants ?? []).map((p) => [p.id, { team_name: p.team_name, crest_url: p.crest_url }]))
+  const standings =
+    !isKnockout && preset && matches ? computeEditionStandings(Array.from(participantMap.keys()), matches, preset) : null
+  const stage = preset?.stages[0]
+  const tiebreakCriteria =
+    stage?.kind === 'round_robin'
+      ? [
+          'points' as const,
+          ...stage.tiebreakCriteria,
+          ...(stage.tiebreakCriteria.includes('draw_lots') ? [] : ['draw_lots' as const]),
+        ]
+      : []
 
   return (
     <div className="mx-auto min-h-screen max-w-md pb-24">
@@ -88,18 +111,43 @@ function EdicaoContent() {
               <CrestChangeRequestsPanel requests={crestRequests} adminId={user.id} onChanged={invalidate} />
             )}
 
-            {loadingMatches || !matches ? (
-              <Skeleton className="h-24 w-full rounded-xl" />
-            ) : (
-              <MatchList
-                matches={matches}
-                isKnockout={isKnockout}
-                isAdmin={isAdmin}
-                editionId={editionId}
-                roundDeadlineDays={edition.round_deadline_days}
-                onChanged={invalidate}
-              />
-            )}
+            <Tabs defaultValue="jogos">
+              <TabsList className="w-full">
+                {standings && <TabsTrigger value="tabela">Tabela</TabsTrigger>}
+                <TabsTrigger value="jogos">Jogos</TabsTrigger>
+                <TabsTrigger value="artilharia">Artilharia</TabsTrigger>
+                <TabsTrigger value="estatisticas">Stats</TabsTrigger>
+              </TabsList>
+
+              {standings && (
+                <TabsContent value="tabela" className="pt-4">
+                  <StandingsTable rows={standings} participants={participantMap} criteria={tiebreakCriteria} />
+                </TabsContent>
+              )}
+
+              <TabsContent value="jogos" className="pt-4">
+                {loadingMatches || !matches ? (
+                  <Skeleton className="h-24 w-full rounded-xl" />
+                ) : (
+                  <MatchList
+                    matches={matches}
+                    isKnockout={isKnockout}
+                    isAdmin={isAdmin}
+                    editionId={editionId}
+                    roundDeadlineDays={edition.round_deadline_days}
+                    onChanged={invalidate}
+                  />
+                )}
+              </TabsContent>
+
+              <TabsContent value="artilharia" className="pt-4">
+                <EditionScorersList events={events ?? []} participants={participantMap} />
+              </TabsContent>
+
+              <TabsContent value="estatisticas" className="pt-4">
+                <PlayerStatsPanel participants={participants ?? []} matches={matches ?? []} />
+              </TabsContent>
+            </Tabs>
           </>
         )}
       </div>

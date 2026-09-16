@@ -6,8 +6,11 @@ import { BottomNav } from '#/components/layout/bottom-nav'
 import { useAuth } from '#/lib/auth/auth-provider'
 import { useLeague, useLeagueMembers, useMyMembership, useInvalidateLeague } from '#/hooks/use-leagues'
 import { useLeagueCompetitions } from '#/hooks/use-competitions'
+import { useLeaguePlayerStats, useLeagueTopScorers } from '#/hooks/use-league-stats'
 import { MembersList } from '#/components/leagues/members-list'
 import { CompetitionCard } from '#/components/competitions/competition-card'
+import { LeagueRankingPanel } from '#/components/leagues/league-ranking-panel'
+import { LeagueTopScorersPanel } from '#/components/leagues/league-top-scorers-panel'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
@@ -29,6 +32,8 @@ function LigaContent() {
   const { data: membership, isLoading: loadingMembership } = useMyMembership(leagueId)
   const { data: members, isLoading: loadingMembers } = useLeagueMembers(leagueId)
   const { data: competitions, isLoading: loadingCompetitions } = useLeagueCompetitions(leagueId)
+  const { data: playerStats, isLoading: loadingPlayerStats } = useLeaguePlayerStats(leagueId)
+  const { data: topScorers, isLoading: loadingTopScorers } = useLeagueTopScorers(leagueId)
   const invalidate = useInvalidateLeague(leagueId)
 
   if (loadingLeague || loadingMembership) {
@@ -120,11 +125,18 @@ function LigaContent() {
             <EmptyState text="A galeria de campeões aparece aqui quando a primeira edição terminar." />
           </TabsContent>
 
-          <TabsContent value="estatisticas" className="pt-4">
-            <div className="grid gap-4">
-              <EmptyState text="Ranking interno: aparece quando houver partidas confirmadas." />
-              <EmptyState text="Artilheiros: aparece quando houver gols registrados." />
-            </div>
+          <TabsContent value="estatisticas" className="grid gap-4 pt-4">
+            {loadingPlayerStats || !playerStats ? (
+              <Skeleton className="h-24 w-full rounded-xl" />
+            ) : (
+              <LeagueRankingPanel rows={playerStats} />
+            )}
+
+            {loadingTopScorers || !topScorers ? (
+              <Skeleton className="h-24 w-full rounded-xl" />
+            ) : (
+              <LeagueTopScorersPanel rows={topScorers} />
+            )}
           </TabsContent>
 
           <TabsContent value="membros" className="pt-4">

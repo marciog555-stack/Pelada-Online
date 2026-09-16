@@ -464,13 +464,13 @@ export type Database = {
         }
         Insert: {
           away_goals?: number | null
-          away_participant_id: string | null
+          away_participant_id?: string | null
           confirmed_at?: string | null
           created_at?: string
           deadline_at?: string | null
           edition_id: string
           home_goals?: number | null
-          home_participant_id: string | null
+          home_participant_id?: string | null
           id?: string
           leg?: number
           reported_at?: string | null
@@ -722,7 +722,33 @@ export type Database = {
       }
       league_id_for_edition: { Args: { p_edition_id: string }; Returns: string }
       league_id_for_match: { Args: { p_match_id: string }; Returns: string }
+      league_player_stats: {
+        Args: { p_league_id: string }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          draws: number
+          goals_against: number
+          goals_for: number
+          losses: number
+          played: number
+          points: number
+          user_id: string
+          wins: number
+        }[]
+      }
       league_role: { Args: { p_league_id: string }; Returns: string }
+      league_top_scorers: {
+        Args: { p_league_id: string }
+        Returns: {
+          assists: number
+          athlete_name: string
+          avatar_url: string
+          display_name: string
+          goals: number
+          user_id: string
+        }[]
+      }
       resolve_contested_match: {
         Args: { p_away_goals: number; p_home_goals: number; p_match_id: string }
         Returns: {

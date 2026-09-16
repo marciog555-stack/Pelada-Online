@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '#/lib/supabase/client'
 import { useAuth } from '#/lib/auth/auth-provider'
@@ -119,6 +120,49 @@ export function useEditionMatches(editionId: string | undefined) {
   })
 }
 
+export function useEditionMatchEvents(editionId: string | undefined) {
+  return useQuery({
+    queryKey: ['edition-match-events', editionId],
+    enabled: !!editionId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('match_events')
+        .select('*, match:matches!inner(id, edition_id, status)')
+        .eq('match.edition_id', editionId!)
+        .eq('match.status', 'confirmed')
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+// Tabela/estatísticas/artilharia acompanham as partidas em tempo real:
+// qualquer mudança em "matches" desta edição (relato, confirmação,
+// resolução de contestação, W.O.) invalida as queries derivadas dela.
+export function useEditionRealtime(editionId: string | undefined) {
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    if (!editionId) return
+
+    const channel = supabase
+      .channel(`edition-matches-${editionId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'matches', filter: `edition_id=eq.${editionId}` },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['edition-matches', editionId] })
+          queryClient.invalidateQueries({ queryKey: ['edition-match-events', editionId] })
+        },
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [editionId, queryClient])
+}
+
 export function useMatch(matchId: string | undefined) {
   return useQuery({
     queryKey: ['match', matchId],
@@ -197,6 +241,7 @@ export function useInvalidateEdition(editionId: string | undefined) {
     queryClient.invalidateQueries({ queryKey: ['edition-participants', editionId] })
     queryClient.invalidateQueries({ queryKey: ['edition-participant-mine', editionId] })
     queryClient.invalidateQueries({ queryKey: ['edition-matches', editionId] })
+    queryClient.invalidateQueries({ queryKey: ['edition-match-events', editionId] })
     queryClient.invalidateQueries({ queryKey: ['crest-requests', editionId] })
   }
 }
