@@ -18,11 +18,14 @@ import { Route as LigasIndexRouteImport } from './routes/ligas/index'
 import { Route as LigasNovaRouteImport } from './routes/ligas/nova'
 import { Route as PerfilIndexRouteImport } from './routes/perfil/index'
 import { Route as PerfilReivindicarIdRouteImport } from './routes/perfil/reivindicar-id'
+import { Route as TemporadasIndexRouteImport } from './routes/temporadas/index'
+import { Route as TemporadasNovaRouteImport } from './routes/temporadas/nova'
 import { Route as CampeonatosCompetitionIdIndexRouteImport } from './routes/campeonatos/$competitionId/index'
 import { Route as EdicoesEditionIdIndexRouteImport } from './routes/edicoes/$editionId/index'
 import { Route as LigasLeagueIdIndexRouteImport } from './routes/ligas/$leagueId/index'
 import { Route as LigasLeagueIdConvidarRouteImport } from './routes/ligas/$leagueId/convidar'
 import { Route as PartidasMatchIdIndexRouteImport } from './routes/partidas/$matchId/index'
+import { Route as TemporadasSeasonIdIndexRouteImport } from './routes/temporadas/$seasonId/index'
 import { Route as LigasLeagueIdCampeonatosNovoRouteImport } from './routes/ligas/$leagueId/campeonatos/novo'
 
 const IndexRoute = IndexRouteImport.update({
@@ -70,6 +73,16 @@ const PerfilReivindicarIdRoute = PerfilReivindicarIdRouteImport.update({
   path: '/perfil/reivindicar-id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TemporadasIndexRoute = TemporadasIndexRouteImport.update({
+  id: '/temporadas/',
+  path: '/temporadas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TemporadasNovaRoute = TemporadasNovaRouteImport.update({
+  id: '/temporadas/nova',
+  path: '/temporadas/nova',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampeonatosCompetitionIdIndexRoute =
   CampeonatosCompetitionIdIndexRouteImport.update({
     id: '/campeonatos/$competitionId/',
@@ -96,6 +109,11 @@ const PartidasMatchIdIndexRoute = PartidasMatchIdIndexRouteImport.update({
   path: '/partidas/$matchId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TemporadasSeasonIdIndexRoute = TemporadasSeasonIdIndexRouteImport.update({
+  id: '/temporadas/$seasonId/',
+  path: '/temporadas/$seasonId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LigasLeagueIdCampeonatosNovoRoute =
   LigasLeagueIdCampeonatosNovoRouteImport.update({
     id: '/ligas/$leagueId/campeonatos/novo',
@@ -111,13 +129,16 @@ export interface FileRoutesByFullPath {
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
   '/ligas/nova': typeof LigasNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/temporadas/nova': typeof TemporadasNovaRoute
   '/ligas/': typeof LigasIndexRoute
   '/perfil/': typeof PerfilIndexRoute
+  '/temporadas/': typeof TemporadasIndexRoute
   '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
   '/campeonatos/$competitionId/': typeof CampeonatosCompetitionIdIndexRoute
   '/edicoes/$editionId/': typeof EdicoesEditionIdIndexRoute
   '/ligas/$leagueId/': typeof LigasLeagueIdIndexRoute
   '/partidas/$matchId/': typeof PartidasMatchIdIndexRoute
+  '/temporadas/$seasonId/': typeof TemporadasSeasonIdIndexRoute
   '/ligas/$leagueId/campeonatos/novo': typeof LigasLeagueIdCampeonatosNovoRoute
 }
 export interface FileRoutesByTo {
@@ -128,13 +149,16 @@ export interface FileRoutesByTo {
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
   '/ligas/nova': typeof LigasNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/temporadas/nova': typeof TemporadasNovaRoute
   '/ligas': typeof LigasIndexRoute
   '/perfil': typeof PerfilIndexRoute
+  '/temporadas': typeof TemporadasIndexRoute
   '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
   '/campeonatos/$competitionId': typeof CampeonatosCompetitionIdIndexRoute
   '/edicoes/$editionId': typeof EdicoesEditionIdIndexRoute
   '/ligas/$leagueId': typeof LigasLeagueIdIndexRoute
   '/partidas/$matchId': typeof PartidasMatchIdIndexRoute
+  '/temporadas/$seasonId': typeof TemporadasSeasonIdIndexRoute
   '/ligas/$leagueId/campeonatos/novo': typeof LigasLeagueIdCampeonatosNovoRoute
 }
 export interface FileRoutesById {
@@ -146,13 +170,16 @@ export interface FileRoutesById {
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
   '/ligas/nova': typeof LigasNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/temporadas/nova': typeof TemporadasNovaRoute
   '/ligas/': typeof LigasIndexRoute
   '/perfil/': typeof PerfilIndexRoute
+  '/temporadas/': typeof TemporadasIndexRoute
   '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
   '/campeonatos/$competitionId/': typeof CampeonatosCompetitionIdIndexRoute
   '/edicoes/$editionId/': typeof EdicoesEditionIdIndexRoute
   '/ligas/$leagueId/': typeof LigasLeagueIdIndexRoute
   '/partidas/$matchId/': typeof PartidasMatchIdIndexRoute
+  '/temporadas/$seasonId/': typeof TemporadasSeasonIdIndexRoute
   '/ligas/$leagueId/campeonatos/novo': typeof LigasLeagueIdCampeonatosNovoRoute
 }
 export interface FileRouteTypes {
@@ -165,13 +192,16 @@ export interface FileRouteTypes {
     | '/jogador/$efootballId'
     | '/ligas/nova'
     | '/perfil/reivindicar-id'
+    | '/temporadas/nova'
     | '/ligas/'
     | '/perfil/'
+    | '/temporadas/'
     | '/ligas/$leagueId/convidar'
     | '/campeonatos/$competitionId/'
     | '/edicoes/$editionId/'
     | '/ligas/$leagueId/'
     | '/partidas/$matchId/'
+    | '/temporadas/$seasonId/'
     | '/ligas/$leagueId/campeonatos/novo'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -182,13 +212,16 @@ export interface FileRouteTypes {
     | '/jogador/$efootballId'
     | '/ligas/nova'
     | '/perfil/reivindicar-id'
+    | '/temporadas/nova'
     | '/ligas'
     | '/perfil'
+    | '/temporadas'
     | '/ligas/$leagueId/convidar'
     | '/campeonatos/$competitionId'
     | '/edicoes/$editionId'
     | '/ligas/$leagueId'
     | '/partidas/$matchId'
+    | '/temporadas/$seasonId'
     | '/ligas/$leagueId/campeonatos/novo'
   id:
     | '__root__'
@@ -199,13 +232,16 @@ export interface FileRouteTypes {
     | '/jogador/$efootballId'
     | '/ligas/nova'
     | '/perfil/reivindicar-id'
+    | '/temporadas/nova'
     | '/ligas/'
     | '/perfil/'
+    | '/temporadas/'
     | '/ligas/$leagueId/convidar'
     | '/campeonatos/$competitionId/'
     | '/edicoes/$editionId/'
     | '/ligas/$leagueId/'
     | '/partidas/$matchId/'
+    | '/temporadas/$seasonId/'
     | '/ligas/$leagueId/campeonatos/novo'
   fileRoutesById: FileRoutesById
 }
@@ -217,13 +253,16 @@ export interface RootRouteChildren {
   JogadorEfootballIdRoute: typeof JogadorEfootballIdRoute
   LigasNovaRoute: typeof LigasNovaRoute
   PerfilReivindicarIdRoute: typeof PerfilReivindicarIdRoute
+  TemporadasNovaRoute: typeof TemporadasNovaRoute
   LigasIndexRoute: typeof LigasIndexRoute
   PerfilIndexRoute: typeof PerfilIndexRoute
+  TemporadasIndexRoute: typeof TemporadasIndexRoute
   LigasLeagueIdConvidarRoute: typeof LigasLeagueIdConvidarRoute
   CampeonatosCompetitionIdIndexRoute: typeof CampeonatosCompetitionIdIndexRoute
   EdicoesEditionIdIndexRoute: typeof EdicoesEditionIdIndexRoute
   LigasLeagueIdIndexRoute: typeof LigasLeagueIdIndexRoute
   PartidasMatchIdIndexRoute: typeof PartidasMatchIdIndexRoute
+  TemporadasSeasonIdIndexRoute: typeof TemporadasSeasonIdIndexRoute
   LigasLeagueIdCampeonatosNovoRoute: typeof LigasLeagueIdCampeonatosNovoRoute
 }
 
@@ -292,6 +331,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PerfilReivindicarIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/temporadas/': {
+      id: '/temporadas/'
+      path: '/temporadas'
+      fullPath: '/temporadas/'
+      preLoaderRoute: typeof TemporadasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/temporadas/nova': {
+      id: '/temporadas/nova'
+      path: '/temporadas/nova'
+      fullPath: '/temporadas/nova'
+      preLoaderRoute: typeof TemporadasNovaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campeonatos/$competitionId/': {
       id: '/campeonatos/$competitionId/'
       path: '/campeonatos/$competitionId'
@@ -327,6 +380,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartidasMatchIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/temporadas/$seasonId/': {
+      id: '/temporadas/$seasonId/'
+      path: '/temporadas/$seasonId'
+      fullPath: '/temporadas/$seasonId/'
+      preLoaderRoute: typeof TemporadasSeasonIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ligas/$leagueId/campeonatos/novo': {
       id: '/ligas/$leagueId/campeonatos/novo'
       path: '/ligas/$leagueId/campeonatos/novo'
@@ -345,13 +405,16 @@ const rootRouteChildren: RootRouteChildren = {
   JogadorEfootballIdRoute: JogadorEfootballIdRoute,
   LigasNovaRoute: LigasNovaRoute,
   PerfilReivindicarIdRoute: PerfilReivindicarIdRoute,
+  TemporadasNovaRoute: TemporadasNovaRoute,
   LigasIndexRoute: LigasIndexRoute,
   PerfilIndexRoute: PerfilIndexRoute,
+  TemporadasIndexRoute: TemporadasIndexRoute,
   LigasLeagueIdConvidarRoute: LigasLeagueIdConvidarRoute,
   CampeonatosCompetitionIdIndexRoute: CampeonatosCompetitionIdIndexRoute,
   EdicoesEditionIdIndexRoute: EdicoesEditionIdIndexRoute,
   LigasLeagueIdIndexRoute: LigasLeagueIdIndexRoute,
   PartidasMatchIdIndexRoute: PartidasMatchIdIndexRoute,
+  TemporadasSeasonIdIndexRoute: TemporadasSeasonIdIndexRoute,
   LigasLeagueIdCampeonatosNovoRoute: LigasLeagueIdCampeonatosNovoRoute,
 }
 export const routeTree = rootRouteImport

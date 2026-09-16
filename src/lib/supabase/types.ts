@@ -662,6 +662,41 @@ export type Database = {
         }
         Relationships: []
       }
+      seasons: {
+        Row: {
+          created_at: string
+          created_by: string
+          ends_at: string
+          id: string
+          name: string
+          starts_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          ends_at: string
+          id?: string
+          name: string
+          starts_at: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          ends_at?: string
+          id?: string
+          name?: string
+          starts_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seasons_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -737,6 +772,18 @@ export type Database = {
           member_count: number
           name: string
           require_approval: boolean
+        }[]
+      }
+      global_season_ranking: {
+        Args: { p_season_id: string }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          editions_played: number
+          efootball_id: string
+          points: number
+          titles: number
+          user_id: string
         }[]
       }
       is_efootball_id_available: {
