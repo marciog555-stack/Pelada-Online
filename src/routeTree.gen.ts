@@ -12,9 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CadastrarRouteImport } from './routes/cadastrar'
 import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as ConviteInviteCodeRouteImport } from './routes/convite/$inviteCode'
 import { Route as JogadorEfootballIdRouteImport } from './routes/jogador/$efootballId'
+import { Route as LigasIndexRouteImport } from './routes/ligas/index'
+import { Route as LigasNovaRouteImport } from './routes/ligas/nova'
 import { Route as PerfilIndexRouteImport } from './routes/perfil/index'
 import { Route as PerfilReivindicarIdRouteImport } from './routes/perfil/reivindicar-id'
+import { Route as LigasLeagueIdIndexRouteImport } from './routes/ligas/$leagueId/index'
+import { Route as LigasLeagueIdConvidarRouteImport } from './routes/ligas/$leagueId/convidar'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,9 +36,24 @@ const EntrarRoute = EntrarRouteImport.update({
   path: '/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConviteInviteCodeRoute = ConviteInviteCodeRouteImport.update({
+  id: '/convite/$inviteCode',
+  path: '/convite/$inviteCode',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JogadorEfootballIdRoute = JogadorEfootballIdRouteImport.update({
   id: '/jogador/$efootballId',
   path: '/jogador/$efootballId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LigasIndexRoute = LigasIndexRouteImport.update({
+  id: '/ligas/',
+  path: '/ligas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LigasNovaRoute = LigasNovaRouteImport.update({
+  id: '/ligas/nova',
+  path: '/ligas/nova',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PerfilIndexRoute = PerfilIndexRouteImport.update({
@@ -46,31 +66,56 @@ const PerfilReivindicarIdRoute = PerfilReivindicarIdRouteImport.update({
   path: '/perfil/reivindicar-id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LigasLeagueIdIndexRoute = LigasLeagueIdIndexRouteImport.update({
+  id: '/ligas/$leagueId/',
+  path: '/ligas/$leagueId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LigasLeagueIdConvidarRoute = LigasLeagueIdConvidarRouteImport.update({
+  id: '/ligas/$leagueId/convidar',
+  path: '/ligas/$leagueId/convidar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastrar': typeof CadastrarRoute
   '/entrar': typeof EntrarRoute
+  '/convite/$inviteCode': typeof ConviteInviteCodeRoute
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
+  '/ligas/nova': typeof LigasNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/ligas/': typeof LigasIndexRoute
   '/perfil/': typeof PerfilIndexRoute
+  '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
+  '/ligas/$leagueId/': typeof LigasLeagueIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastrar': typeof CadastrarRoute
   '/entrar': typeof EntrarRoute
+  '/convite/$inviteCode': typeof ConviteInviteCodeRoute
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
+  '/ligas/nova': typeof LigasNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/ligas': typeof LigasIndexRoute
   '/perfil': typeof PerfilIndexRoute
+  '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
+  '/ligas/$leagueId': typeof LigasLeagueIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cadastrar': typeof CadastrarRoute
   '/entrar': typeof EntrarRoute
+  '/convite/$inviteCode': typeof ConviteInviteCodeRoute
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
+  '/ligas/nova': typeof LigasNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/ligas/': typeof LigasIndexRoute
   '/perfil/': typeof PerfilIndexRoute
+  '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
+  '/ligas/$leagueId/': typeof LigasLeagueIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -78,34 +123,54 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastrar'
     | '/entrar'
+    | '/convite/$inviteCode'
     | '/jogador/$efootballId'
+    | '/ligas/nova'
     | '/perfil/reivindicar-id'
+    | '/ligas/'
     | '/perfil/'
+    | '/ligas/$leagueId/convidar'
+    | '/ligas/$leagueId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/cadastrar'
     | '/entrar'
+    | '/convite/$inviteCode'
     | '/jogador/$efootballId'
+    | '/ligas/nova'
     | '/perfil/reivindicar-id'
+    | '/ligas'
     | '/perfil'
+    | '/ligas/$leagueId/convidar'
+    | '/ligas/$leagueId'
   id:
     | '__root__'
     | '/'
     | '/cadastrar'
     | '/entrar'
+    | '/convite/$inviteCode'
     | '/jogador/$efootballId'
+    | '/ligas/nova'
     | '/perfil/reivindicar-id'
+    | '/ligas/'
     | '/perfil/'
+    | '/ligas/$leagueId/convidar'
+    | '/ligas/$leagueId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastrarRoute: typeof CadastrarRoute
   EntrarRoute: typeof EntrarRoute
+  ConviteInviteCodeRoute: typeof ConviteInviteCodeRoute
   JogadorEfootballIdRoute: typeof JogadorEfootballIdRoute
+  LigasNovaRoute: typeof LigasNovaRoute
   PerfilReivindicarIdRoute: typeof PerfilReivindicarIdRoute
+  LigasIndexRoute: typeof LigasIndexRoute
   PerfilIndexRoute: typeof PerfilIndexRoute
+  LigasLeagueIdConvidarRoute: typeof LigasLeagueIdConvidarRoute
+  LigasLeagueIdIndexRoute: typeof LigasLeagueIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -131,11 +196,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/convite/$inviteCode': {
+      id: '/convite/$inviteCode'
+      path: '/convite/$inviteCode'
+      fullPath: '/convite/$inviteCode'
+      preLoaderRoute: typeof ConviteInviteCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jogador/$efootballId': {
       id: '/jogador/$efootballId'
       path: '/jogador/$efootballId'
       fullPath: '/jogador/$efootballId'
       preLoaderRoute: typeof JogadorEfootballIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ligas/': {
+      id: '/ligas/'
+      path: '/ligas'
+      fullPath: '/ligas/'
+      preLoaderRoute: typeof LigasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ligas/nova': {
+      id: '/ligas/nova'
+      path: '/ligas/nova'
+      fullPath: '/ligas/nova'
+      preLoaderRoute: typeof LigasNovaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/perfil/': {
@@ -152,6 +238,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PerfilReivindicarIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ligas/$leagueId/': {
+      id: '/ligas/$leagueId/'
+      path: '/ligas/$leagueId'
+      fullPath: '/ligas/$leagueId/'
+      preLoaderRoute: typeof LigasLeagueIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ligas/$leagueId/convidar': {
+      id: '/ligas/$leagueId/convidar'
+      path: '/ligas/$leagueId/convidar'
+      fullPath: '/ligas/$leagueId/convidar'
+      preLoaderRoute: typeof LigasLeagueIdConvidarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -159,9 +259,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastrarRoute: CadastrarRoute,
   EntrarRoute: EntrarRoute,
+  ConviteInviteCodeRoute: ConviteInviteCodeRoute,
   JogadorEfootballIdRoute: JogadorEfootballIdRoute,
+  LigasNovaRoute: LigasNovaRoute,
   PerfilReivindicarIdRoute: PerfilReivindicarIdRoute,
+  LigasIndexRoute: LigasIndexRoute,
   PerfilIndexRoute: PerfilIndexRoute,
+  LigasLeagueIdConvidarRoute: LigasLeagueIdConvidarRoute,
+  LigasLeagueIdIndexRoute: LigasLeagueIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

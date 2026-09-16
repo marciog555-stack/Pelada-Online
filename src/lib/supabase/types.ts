@@ -63,6 +63,89 @@ export type Database = {
           },
         ]
       }
+      league_members: {
+        Row: {
+          id: string
+          joined_at: string
+          league_id: string
+          role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          league_id: string
+          role?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          league_id?: string
+          role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_members_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "league_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leagues: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          invite_code: string
+          name: string
+          owner_id: string
+          require_approval: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          invite_code?: string
+          name: string
+          owner_id: string
+          require_approval?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          invite_code?: string
+          name?: string
+          owner_id?: string
+          require_approval?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leagues_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_admins: {
         Row: {
           created_at: string
@@ -140,12 +223,42 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_league_preview_by_invite_code: {
+        Args: { p_invite_code: string }
+        Returns: {
+          description: string
+          id: string
+          member_count: number
+          name: string
+          require_approval: boolean
+        }[]
+      }
       is_efootball_id_available: {
         Args: { p_efootball_id: string }
         Returns: boolean
       }
+      is_league_admin: { Args: { p_league_id: string }; Returns: boolean }
+      is_league_member: { Args: { p_league_id: string }; Returns: boolean }
       is_phone_available: { Args: { p_phone: string }; Returns: boolean }
       is_platform_admin: { Args: never; Returns: boolean }
+      join_league_by_invite_code: {
+        Args: { p_invite_code: string }
+        Returns: {
+          id: string
+          joined_at: string
+          league_id: string
+          role: string
+          status: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "league_members"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      league_role: { Args: { p_league_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never

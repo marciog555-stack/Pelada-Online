@@ -15,5 +15,5 @@ function Home() {
     )
   }
 
-  return <Navigate to={status === 'signed-in' ? '/perfil' : '/entrar'} />
+  return <Navigate to={status === 'signed-in' ? '/ligas' : '/entrar'} />
 }

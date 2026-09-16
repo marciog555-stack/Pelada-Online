@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { RequireAuth } from '#/components/auth/require-auth'
 import { AppHeader } from '#/components/layout/app-header'
+import { BottomNav } from '#/components/layout/bottom-nav'
 import { useAuth } from '#/lib/auth/auth-provider'
 import { useOwnProfile, useInvalidateOwnProfile } from '#/hooks/use-profile'
 import { AvatarUploader } from '#/components/profile/avatar-uploader'
@@ -12,7 +13,6 @@ import { Input } from '#/components/ui/input'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Separator } from '#/components/ui/separator'
 import { supabase } from '#/lib/supabase/client'
-import { PENDING_ID_CLAIM_KEY } from '#/lib/auth/pending-claim'
 
 export const Route = createFileRoute('/perfil/')({ component: PerfilPage })
 
@@ -31,16 +31,6 @@ function PerfilContent() {
   const navigate = useNavigate()
   const [claimId, setClaimId] = useState('')
 
-  // Se veio de um cadastro onde a pessoa marcou "esse ID é meu", manda
-  // direto para a contestação assim que ela chega na própria página.
-  useEffect(() => {
-    const pendingClaim = localStorage.getItem(PENDING_ID_CLAIM_KEY)
-    if (pendingClaim) {
-      localStorage.removeItem(PENDING_ID_CLAIM_KEY)
-      navigate({ to: '/perfil/reivindicar-id', search: { efootballId: pendingClaim } })
-    }
-  }, [navigate])
-
   if (isLoading || !profile) {
     return (
       <div className="mx-auto max-w-md px-4 py-10">
@@ -50,7 +40,7 @@ function PerfilContent() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-md pb-10">
+    <div className="mx-auto min-h-screen max-w-md pb-24">
       <AppHeader title="Minha conta" />
       <div className="grid gap-6 px-4 py-6">
         <AvatarUploader
@@ -107,6 +97,7 @@ function PerfilContent() {
           Sair
         </Button>
       </div>
+      <BottomNav />
     </div>
   )
 }
