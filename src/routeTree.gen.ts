@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CadastrarRouteImport } from './routes/cadastrar'
+import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as JogadorEfootballIdRouteImport } from './routes/jogador/$efootballId'
+import { Route as PerfilIndexRouteImport } from './routes/perfil/index'
+import { Route as PerfilReivindicarIdRouteImport } from './routes/perfil/reivindicar-id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CadastrarRoute = CadastrarRouteImport.update({
+  id: '/cadastrar',
+  path: '/cadastrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JogadorEfootballIdRoute = JogadorEfootballIdRouteImport.update({
+  id: '/jogador/$efootballId',
+  path: '/jogador/$efootballId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilIndexRoute = PerfilIndexRouteImport.update({
+  id: '/perfil/',
+  path: '/perfil/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilReivindicarIdRoute = PerfilReivindicarIdRouteImport.update({
+  id: '/perfil/reivindicar-id',
+  path: '/perfil/reivindicar-id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cadastrar': typeof CadastrarRoute
+  '/entrar': typeof EntrarRoute
+  '/jogador/$efootballId': typeof JogadorEfootballIdRoute
+  '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/perfil/': typeof PerfilIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastrar': typeof CadastrarRoute
+  '/entrar': typeof EntrarRoute
+  '/jogador/$efootballId': typeof JogadorEfootballIdRoute
+  '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/perfil': typeof PerfilIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cadastrar': typeof CadastrarRoute
+  '/entrar': typeof EntrarRoute
+  '/jogador/$efootballId': typeof JogadorEfootballIdRoute
+  '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
+  '/perfil/': typeof PerfilIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cadastrar'
+    | '/entrar'
+    | '/jogador/$efootballId'
+    | '/perfil/reivindicar-id'
+    | '/perfil/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cadastrar'
+    | '/entrar'
+    | '/jogador/$efootballId'
+    | '/perfil/reivindicar-id'
+    | '/perfil'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadastrar'
+    | '/entrar'
+    | '/jogador/$efootballId'
+    | '/perfil/reivindicar-id'
+    | '/perfil/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CadastrarRoute: typeof CadastrarRoute
+  EntrarRoute: typeof EntrarRoute
+  JogadorEfootballIdRoute: typeof JogadorEfootballIdRoute
+  PerfilReivindicarIdRoute: typeof PerfilReivindicarIdRoute
+  PerfilIndexRoute: typeof PerfilIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cadastrar': {
+      id: '/cadastrar'
+      path: '/cadastrar'
+      fullPath: '/cadastrar'
+      preLoaderRoute: typeof CadastrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jogador/$efootballId': {
+      id: '/jogador/$efootballId'
+      path: '/jogador/$efootballId'
+      fullPath: '/jogador/$efootballId'
+      preLoaderRoute: typeof JogadorEfootballIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil/': {
+      id: '/perfil/'
+      path: '/perfil'
+      fullPath: '/perfil/'
+      preLoaderRoute: typeof PerfilIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil/reivindicar-id': {
+      id: '/perfil/reivindicar-id'
+      path: '/perfil/reivindicar-id'
+      fullPath: '/perfil/reivindicar-id'
+      preLoaderRoute: typeof PerfilReivindicarIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CadastrarRoute: CadastrarRoute,
+  EntrarRoute: EntrarRoute,
+  JogadorEfootballIdRoute: JogadorEfootballIdRoute,
+  PerfilReivindicarIdRoute: PerfilReivindicarIdRoute,
+  PerfilIndexRoute: PerfilIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
