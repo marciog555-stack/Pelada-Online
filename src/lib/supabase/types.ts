@@ -16,6 +16,194 @@ export type Database = {
   }
   public: {
     Tables: {
+      competitions: {
+        Row: {
+          connection_drop_rule: string | null
+          created_at: string
+          created_by: string
+          id: string
+          league_id: string
+          name: string
+          preset_id: string
+        }
+        Insert: {
+          connection_drop_rule?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          league_id: string
+          name: string
+          preset_id: string
+        }
+        Update: {
+          connection_drop_rule?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          league_id?: string
+          name?: string
+          preset_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competitions_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crest_change_requests: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          edition_participant_id: string
+          id: string
+          requested_crest_url: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          edition_participant_id: string
+          id?: string
+          requested_crest_url: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          edition_participant_id?: string
+          id?: string
+          requested_crest_url?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crest_change_requests_edition_participant_id_fkey"
+            columns: ["edition_participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crest_change_requests_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      edition_participants: {
+        Row: {
+          created_at: string
+          crest_url: string | null
+          edition_id: string
+          final_position: number | null
+          id: string
+          primary_color: string
+          team_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          crest_url?: string | null
+          edition_id: string
+          final_position?: number | null
+          id?: string
+          primary_color?: string
+          team_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          crest_url?: string | null
+          edition_id?: string
+          final_position?: number | null
+          id?: string
+          primary_color?: string
+          team_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edition_participants_edition_id_fkey"
+            columns: ["edition_id"]
+            isOneToOne: false
+            referencedRelation: "editions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edition_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      editions: {
+        Row: {
+          competition_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          number: number
+          round_deadline_days: number
+          started_at: string | null
+          status: string
+          wo_away_goals: number
+          wo_home_goals: number
+        }
+        Insert: {
+          competition_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          number: number
+          round_deadline_days?: number
+          started_at?: string | null
+          status?: string
+          wo_away_goals?: number
+          wo_home_goals?: number
+        }
+        Update: {
+          competition_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          number?: number
+          round_deadline_days?: number
+          started_at?: string | null
+          status?: string
+          wo_away_goals?: number
+          wo_home_goals?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editions_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       efootball_id_claims: {
         Row: {
           admin_note: string | null
@@ -146,6 +334,217 @@ export type Database = {
           },
         ]
       }
+      match_events: {
+        Row: {
+          assist_athlete_name: string | null
+          athlete_name: string
+          created_at: string
+          event_type: string
+          id: string
+          match_id: string
+          participant_id: string
+        }
+        Insert: {
+          assist_athlete_name?: string | null
+          athlete_name: string
+          created_at?: string
+          event_type: string
+          id?: string
+          match_id: string
+          participant_id: string
+        }
+        Update: {
+          assist_athlete_name?: string | null
+          athlete_name?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          match_id?: string
+          participant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_events_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_events_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_reports: {
+        Row: {
+          away_goals: number
+          away_red_cards: number
+          away_yellow_cards: number
+          created_at: string
+          home_goals: number
+          home_red_cards: number
+          home_yellow_cards: number
+          id: string
+          kind: string
+          match_id: string
+          message: string | null
+          reported_by: string
+          screenshot_path: string
+        }
+        Insert: {
+          away_goals: number
+          away_red_cards?: number
+          away_yellow_cards?: number
+          created_at?: string
+          home_goals: number
+          home_red_cards?: number
+          home_yellow_cards?: number
+          id?: string
+          kind?: string
+          match_id: string
+          message?: string | null
+          reported_by: string
+          screenshot_path: string
+        }
+        Update: {
+          away_goals?: number
+          away_red_cards?: number
+          away_yellow_cards?: number
+          created_at?: string
+          home_goals?: number
+          home_red_cards?: number
+          home_yellow_cards?: number
+          id?: string
+          kind?: string
+          match_id?: string
+          message?: string | null
+          reported_by?: string
+          screenshot_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_reports_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_reports_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matches: {
+        Row: {
+          away_goals: number | null
+          away_participant_id: string | null
+          confirmed_at: string | null
+          created_at: string
+          deadline_at: string | null
+          edition_id: string
+          home_goals: number | null
+          home_participant_id: string | null
+          id: string
+          leg: number
+          reported_at: string | null
+          reported_by: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_participant_id: string | null
+        }
+        Insert: {
+          away_goals?: number | null
+          away_participant_id: string | null
+          confirmed_at?: string | null
+          created_at?: string
+          deadline_at?: string | null
+          edition_id: string
+          home_goals?: number | null
+          home_participant_id: string | null
+          id?: string
+          leg?: number
+          reported_at?: string | null
+          reported_by?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          round: number
+          status?: string
+          wo_winner_participant_id?: string | null
+        }
+        Update: {
+          away_goals?: number | null
+          away_participant_id?: string | null
+          confirmed_at?: string | null
+          created_at?: string
+          deadline_at?: string | null
+          edition_id?: string
+          home_goals?: number | null
+          home_participant_id?: string | null
+          id?: string
+          leg?: number
+          reported_at?: string | null
+          reported_by?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          round?: number
+          status?: string
+          wo_winner_participant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matches_away_participant_id_fkey"
+            columns: ["away_participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_edition_id_fkey"
+            columns: ["edition_id"]
+            isOneToOne: false
+            referencedRelation: "editions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_home_participant_id_fkey"
+            columns: ["home_participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_wo_winner_participant_id_fkey"
+            columns: ["wo_winner_participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_admins: {
         Row: {
           created_at: string
@@ -223,6 +622,64 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_match_wo: {
+        Args: { p_match_id: string; p_winner_participant_id: string }
+        Returns: {
+          away_goals: number | null
+          away_participant_id: string | null
+          confirmed_at: string | null
+          created_at: string
+          deadline_at: string | null
+          edition_id: string
+          home_goals: number | null
+          home_participant_id: string | null
+          id: string
+          leg: number
+          reported_at: string | null
+          reported_by: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_participant_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      auto_confirm_overdue_matches: { Args: never; Returns: undefined }
+      confirm_match_report: {
+        Args: { p_match_id: string }
+        Returns: {
+          away_goals: number | null
+          away_participant_id: string | null
+          confirmed_at: string | null
+          created_at: string
+          deadline_at: string | null
+          edition_id: string
+          home_goals: number | null
+          home_participant_id: string | null
+          id: string
+          leg: number
+          reported_at: string | null
+          reported_by: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_participant_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      edition_status: { Args: { p_edition_id: string }; Returns: string }
       get_league_preview_by_invite_code: {
         Args: { p_invite_code: string }
         Returns: {
@@ -239,6 +696,7 @@ export type Database = {
       }
       is_league_admin: { Args: { p_league_id: string }; Returns: boolean }
       is_league_member: { Args: { p_league_id: string }; Returns: boolean }
+      is_match_player: { Args: { p_match_id: string }; Returns: boolean }
       is_phone_available: { Args: { p_phone: string }; Returns: boolean }
       is_platform_admin: { Args: never; Returns: boolean }
       join_league_by_invite_code: {
@@ -258,7 +716,79 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      league_id_for_competition: {
+        Args: { p_competition_id: string }
+        Returns: string
+      }
+      league_id_for_edition: { Args: { p_edition_id: string }; Returns: string }
+      league_id_for_match: { Args: { p_match_id: string }; Returns: string }
       league_role: { Args: { p_league_id: string }; Returns: string }
+      resolve_contested_match: {
+        Args: { p_away_goals: number; p_home_goals: number; p_match_id: string }
+        Returns: {
+          away_goals: number | null
+          away_participant_id: string | null
+          confirmed_at: string | null
+          created_at: string
+          deadline_at: string | null
+          edition_id: string
+          home_goals: number | null
+          home_participant_id: string | null
+          id: string
+          leg: number
+          reported_at: string | null
+          reported_by: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_participant_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      submit_match_report: {
+        Args: {
+          p_away_goals: number
+          p_away_red_cards: number
+          p_away_yellow_cards: number
+          p_events: Json
+          p_home_goals: number
+          p_home_red_cards: number
+          p_home_yellow_cards: number
+          p_match_id: string
+          p_screenshot_path: string
+        }
+        Returns: {
+          away_goals: number | null
+          away_participant_id: string | null
+          confirmed_at: string | null
+          created_at: string
+          deadline_at: string | null
+          edition_id: string
+          home_goals: number | null
+          home_participant_id: string | null
+          id: string
+          leg: number
+          reported_at: string | null
+          reported_by: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_participant_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never

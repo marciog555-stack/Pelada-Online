@@ -40,3 +40,34 @@ export async function uploadIdClaimProof(userId: string, file: File): Promise<st
 
   return path
 }
+
+export async function uploadCrest(userId: string, file: File): Promise<string> {
+  assertValidImage(file)
+  const path = `${userId}/${Date.now()}.${extensionFor(file)}`
+
+  const { error: uploadError } = await supabase.storage
+    .from('crests')
+    .upload(path, file, { contentType: file.type })
+  if (uploadError) throw uploadError
+
+  const { data } = supabase.storage.from('crests').getPublicUrl(path)
+  return data.publicUrl
+}
+
+export async function uploadMatchProof(matchId: string, file: File): Promise<string> {
+  assertValidImage(file)
+  const path = `${matchId}/${Date.now()}.${extensionFor(file)}`
+
+  const { error: uploadError } = await supabase.storage
+    .from('match-proofs')
+    .upload(path, file, { contentType: file.type })
+  if (uploadError) throw uploadError
+
+  return path
+}
+
+export async function getMatchProofUrl(path: string): Promise<string> {
+  const { data, error } = await supabase.storage.from('match-proofs').createSignedUrl(path, 3600)
+  if (error) throw error
+  return data.signedUrl
+}

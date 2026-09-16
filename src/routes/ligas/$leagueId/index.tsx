@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Trophy, Users2, Swords, BarChart3, Clock } from 'lucide-react'
+import { Plus, Trophy, Users2, Swords, BarChart3, Clock } from 'lucide-react'
 import { RequireAuth } from '#/components/auth/require-auth'
 import { AppHeader } from '#/components/layout/app-header'
 import { BottomNav } from '#/components/layout/bottom-nav'
 import { useAuth } from '#/lib/auth/auth-provider'
 import { useLeague, useLeagueMembers, useMyMembership, useInvalidateLeague } from '#/hooks/use-leagues'
+import { useLeagueCompetitions } from '#/hooks/use-competitions'
 import { MembersList } from '#/components/leagues/members-list'
+import { CompetitionCard } from '#/components/competitions/competition-card'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
@@ -26,6 +28,7 @@ function LigaContent() {
   const { data: league, isLoading: loadingLeague } = useLeague(leagueId)
   const { data: membership, isLoading: loadingMembership } = useMyMembership(leagueId)
   const { data: members, isLoading: loadingMembers } = useLeagueMembers(leagueId)
+  const { data: competitions, isLoading: loadingCompetitions } = useLeagueCompetitions(leagueId)
   const invalidate = useInvalidateLeague(leagueId)
 
   if (loadingLeague || loadingMembership) {
@@ -95,8 +98,22 @@ function LigaContent() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="campeonatos" className="pt-4">
-            <EmptyState text="Nenhum campeonato criado ainda nessa liga." />
+          <TabsContent value="campeonatos" className="grid gap-3 pt-4">
+            <Button asChild variant="secondary" size="sm" className="justify-self-start">
+              <Link to="/ligas/$leagueId/campeonatos/novo" params={{ leagueId }}>
+                <Plus className="size-4" /> Criar campeonato
+              </Link>
+            </Button>
+
+            {loadingCompetitions && <Skeleton className="h-16 w-full rounded-xl" />}
+
+            {!loadingCompetitions && competitions?.length === 0 && (
+              <EmptyState text="Nenhum campeonato criado ainda nessa liga." />
+            )}
+
+            {competitions?.map((competition) => (
+              <CompetitionCard key={competition.id} competition={competition} />
+            ))}
           </TabsContent>
 
           <TabsContent value="campeoes" className="pt-4">
