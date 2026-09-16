@@ -16,6 +16,8 @@ import { Route as ConviteInviteCodeRouteImport } from './routes/convite/$inviteC
 import { Route as JogadorEfootballIdRouteImport } from './routes/jogador/$efootballId'
 import { Route as LigasIndexRouteImport } from './routes/ligas/index'
 import { Route as LigasNovaRouteImport } from './routes/ligas/nova'
+import { Route as MundialIndexRouteImport } from './routes/mundial/index'
+import { Route as MundialNovaRouteImport } from './routes/mundial/nova'
 import { Route as PerfilIndexRouteImport } from './routes/perfil/index'
 import { Route as PerfilReivindicarIdRouteImport } from './routes/perfil/reivindicar-id'
 import { Route as TemporadasIndexRouteImport } from './routes/temporadas/index'
@@ -24,6 +26,7 @@ import { Route as CampeonatosCompetitionIdIndexRouteImport } from './routes/camp
 import { Route as EdicoesEditionIdIndexRouteImport } from './routes/edicoes/$editionId/index'
 import { Route as LigasLeagueIdIndexRouteImport } from './routes/ligas/$leagueId/index'
 import { Route as LigasLeagueIdConvidarRouteImport } from './routes/ligas/$leagueId/convidar'
+import { Route as MundialMundialIdIndexRouteImport } from './routes/mundial/$mundialId/index'
 import { Route as PartidasMatchIdIndexRouteImport } from './routes/partidas/$matchId/index'
 import { Route as TemporadasSeasonIdIndexRouteImport } from './routes/temporadas/$seasonId/index'
 import { Route as LigasLeagueIdCampeonatosNovoRouteImport } from './routes/ligas/$leagueId/campeonatos/novo'
@@ -61,6 +64,16 @@ const LigasIndexRoute = LigasIndexRouteImport.update({
 const LigasNovaRoute = LigasNovaRouteImport.update({
   id: '/ligas/nova',
   path: '/ligas/nova',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MundialIndexRoute = MundialIndexRouteImport.update({
+  id: '/mundial/',
+  path: '/mundial/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MundialNovaRoute = MundialNovaRouteImport.update({
+  id: '/mundial/nova',
+  path: '/mundial/nova',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PerfilIndexRoute = PerfilIndexRouteImport.update({
@@ -104,6 +117,11 @@ const LigasLeagueIdConvidarRoute = LigasLeagueIdConvidarRouteImport.update({
   path: '/ligas/$leagueId/convidar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MundialMundialIdIndexRoute = MundialMundialIdIndexRouteImport.update({
+  id: '/mundial/$mundialId/',
+  path: '/mundial/$mundialId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartidasMatchIdIndexRoute = PartidasMatchIdIndexRouteImport.update({
   id: '/partidas/$matchId/',
   path: '/partidas/$matchId/',
@@ -128,15 +146,18 @@ export interface FileRoutesByFullPath {
   '/convite/$inviteCode': typeof ConviteInviteCodeRoute
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
   '/ligas/nova': typeof LigasNovaRoute
+  '/mundial/nova': typeof MundialNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
   '/temporadas/nova': typeof TemporadasNovaRoute
   '/ligas/': typeof LigasIndexRoute
+  '/mundial/': typeof MundialIndexRoute
   '/perfil/': typeof PerfilIndexRoute
   '/temporadas/': typeof TemporadasIndexRoute
   '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
   '/campeonatos/$competitionId/': typeof CampeonatosCompetitionIdIndexRoute
   '/edicoes/$editionId/': typeof EdicoesEditionIdIndexRoute
   '/ligas/$leagueId/': typeof LigasLeagueIdIndexRoute
+  '/mundial/$mundialId/': typeof MundialMundialIdIndexRoute
   '/partidas/$matchId/': typeof PartidasMatchIdIndexRoute
   '/temporadas/$seasonId/': typeof TemporadasSeasonIdIndexRoute
   '/ligas/$leagueId/campeonatos/novo': typeof LigasLeagueIdCampeonatosNovoRoute
@@ -148,15 +169,18 @@ export interface FileRoutesByTo {
   '/convite/$inviteCode': typeof ConviteInviteCodeRoute
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
   '/ligas/nova': typeof LigasNovaRoute
+  '/mundial/nova': typeof MundialNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
   '/temporadas/nova': typeof TemporadasNovaRoute
   '/ligas': typeof LigasIndexRoute
+  '/mundial': typeof MundialIndexRoute
   '/perfil': typeof PerfilIndexRoute
   '/temporadas': typeof TemporadasIndexRoute
   '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
   '/campeonatos/$competitionId': typeof CampeonatosCompetitionIdIndexRoute
   '/edicoes/$editionId': typeof EdicoesEditionIdIndexRoute
   '/ligas/$leagueId': typeof LigasLeagueIdIndexRoute
+  '/mundial/$mundialId': typeof MundialMundialIdIndexRoute
   '/partidas/$matchId': typeof PartidasMatchIdIndexRoute
   '/temporadas/$seasonId': typeof TemporadasSeasonIdIndexRoute
   '/ligas/$leagueId/campeonatos/novo': typeof LigasLeagueIdCampeonatosNovoRoute
@@ -169,15 +193,18 @@ export interface FileRoutesById {
   '/convite/$inviteCode': typeof ConviteInviteCodeRoute
   '/jogador/$efootballId': typeof JogadorEfootballIdRoute
   '/ligas/nova': typeof LigasNovaRoute
+  '/mundial/nova': typeof MundialNovaRoute
   '/perfil/reivindicar-id': typeof PerfilReivindicarIdRoute
   '/temporadas/nova': typeof TemporadasNovaRoute
   '/ligas/': typeof LigasIndexRoute
+  '/mundial/': typeof MundialIndexRoute
   '/perfil/': typeof PerfilIndexRoute
   '/temporadas/': typeof TemporadasIndexRoute
   '/ligas/$leagueId/convidar': typeof LigasLeagueIdConvidarRoute
   '/campeonatos/$competitionId/': typeof CampeonatosCompetitionIdIndexRoute
   '/edicoes/$editionId/': typeof EdicoesEditionIdIndexRoute
   '/ligas/$leagueId/': typeof LigasLeagueIdIndexRoute
+  '/mundial/$mundialId/': typeof MundialMundialIdIndexRoute
   '/partidas/$matchId/': typeof PartidasMatchIdIndexRoute
   '/temporadas/$seasonId/': typeof TemporadasSeasonIdIndexRoute
   '/ligas/$leagueId/campeonatos/novo': typeof LigasLeagueIdCampeonatosNovoRoute
@@ -191,15 +218,18 @@ export interface FileRouteTypes {
     | '/convite/$inviteCode'
     | '/jogador/$efootballId'
     | '/ligas/nova'
+    | '/mundial/nova'
     | '/perfil/reivindicar-id'
     | '/temporadas/nova'
     | '/ligas/'
+    | '/mundial/'
     | '/perfil/'
     | '/temporadas/'
     | '/ligas/$leagueId/convidar'
     | '/campeonatos/$competitionId/'
     | '/edicoes/$editionId/'
     | '/ligas/$leagueId/'
+    | '/mundial/$mundialId/'
     | '/partidas/$matchId/'
     | '/temporadas/$seasonId/'
     | '/ligas/$leagueId/campeonatos/novo'
@@ -211,15 +241,18 @@ export interface FileRouteTypes {
     | '/convite/$inviteCode'
     | '/jogador/$efootballId'
     | '/ligas/nova'
+    | '/mundial/nova'
     | '/perfil/reivindicar-id'
     | '/temporadas/nova'
     | '/ligas'
+    | '/mundial'
     | '/perfil'
     | '/temporadas'
     | '/ligas/$leagueId/convidar'
     | '/campeonatos/$competitionId'
     | '/edicoes/$editionId'
     | '/ligas/$leagueId'
+    | '/mundial/$mundialId'
     | '/partidas/$matchId'
     | '/temporadas/$seasonId'
     | '/ligas/$leagueId/campeonatos/novo'
@@ -231,15 +264,18 @@ export interface FileRouteTypes {
     | '/convite/$inviteCode'
     | '/jogador/$efootballId'
     | '/ligas/nova'
+    | '/mundial/nova'
     | '/perfil/reivindicar-id'
     | '/temporadas/nova'
     | '/ligas/'
+    | '/mundial/'
     | '/perfil/'
     | '/temporadas/'
     | '/ligas/$leagueId/convidar'
     | '/campeonatos/$competitionId/'
     | '/edicoes/$editionId/'
     | '/ligas/$leagueId/'
+    | '/mundial/$mundialId/'
     | '/partidas/$matchId/'
     | '/temporadas/$seasonId/'
     | '/ligas/$leagueId/campeonatos/novo'
@@ -252,15 +288,18 @@ export interface RootRouteChildren {
   ConviteInviteCodeRoute: typeof ConviteInviteCodeRoute
   JogadorEfootballIdRoute: typeof JogadorEfootballIdRoute
   LigasNovaRoute: typeof LigasNovaRoute
+  MundialNovaRoute: typeof MundialNovaRoute
   PerfilReivindicarIdRoute: typeof PerfilReivindicarIdRoute
   TemporadasNovaRoute: typeof TemporadasNovaRoute
   LigasIndexRoute: typeof LigasIndexRoute
+  MundialIndexRoute: typeof MundialIndexRoute
   PerfilIndexRoute: typeof PerfilIndexRoute
   TemporadasIndexRoute: typeof TemporadasIndexRoute
   LigasLeagueIdConvidarRoute: typeof LigasLeagueIdConvidarRoute
   CampeonatosCompetitionIdIndexRoute: typeof CampeonatosCompetitionIdIndexRoute
   EdicoesEditionIdIndexRoute: typeof EdicoesEditionIdIndexRoute
   LigasLeagueIdIndexRoute: typeof LigasLeagueIdIndexRoute
+  MundialMundialIdIndexRoute: typeof MundialMundialIdIndexRoute
   PartidasMatchIdIndexRoute: typeof PartidasMatchIdIndexRoute
   TemporadasSeasonIdIndexRoute: typeof TemporadasSeasonIdIndexRoute
   LigasLeagueIdCampeonatosNovoRoute: typeof LigasLeagueIdCampeonatosNovoRoute
@@ -315,6 +354,20 @@ declare module '@tanstack/react-router' {
       path: '/ligas/nova'
       fullPath: '/ligas/nova'
       preLoaderRoute: typeof LigasNovaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mundial/': {
+      id: '/mundial/'
+      path: '/mundial'
+      fullPath: '/mundial/'
+      preLoaderRoute: typeof MundialIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mundial/nova': {
+      id: '/mundial/nova'
+      path: '/mundial/nova'
+      fullPath: '/mundial/nova'
+      preLoaderRoute: typeof MundialNovaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/perfil/': {
@@ -373,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LigasLeagueIdConvidarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mundial/$mundialId/': {
+      id: '/mundial/$mundialId/'
+      path: '/mundial/$mundialId'
+      fullPath: '/mundial/$mundialId/'
+      preLoaderRoute: typeof MundialMundialIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partidas/$matchId/': {
       id: '/partidas/$matchId/'
       path: '/partidas/$matchId'
@@ -404,15 +464,18 @@ const rootRouteChildren: RootRouteChildren = {
   ConviteInviteCodeRoute: ConviteInviteCodeRoute,
   JogadorEfootballIdRoute: JogadorEfootballIdRoute,
   LigasNovaRoute: LigasNovaRoute,
+  MundialNovaRoute: MundialNovaRoute,
   PerfilReivindicarIdRoute: PerfilReivindicarIdRoute,
   TemporadasNovaRoute: TemporadasNovaRoute,
   LigasIndexRoute: LigasIndexRoute,
+  MundialIndexRoute: MundialIndexRoute,
   PerfilIndexRoute: PerfilIndexRoute,
   TemporadasIndexRoute: TemporadasIndexRoute,
   LigasLeagueIdConvidarRoute: LigasLeagueIdConvidarRoute,
   CampeonatosCompetitionIdIndexRoute: CampeonatosCompetitionIdIndexRoute,
   EdicoesEditionIdIndexRoute: EdicoesEditionIdIndexRoute,
   LigasLeagueIdIndexRoute: LigasLeagueIdIndexRoute,
+  MundialMundialIdIndexRoute: MundialMundialIdIndexRoute,
   PartidasMatchIdIndexRoute: PartidasMatchIdIndexRoute,
   TemporadasSeasonIdIndexRoute: TemporadasSeasonIdIndexRoute,
   LigasLeagueIdCampeonatosNovoRoute: LigasLeagueIdCampeonatosNovoRoute,

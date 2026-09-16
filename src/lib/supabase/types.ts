@@ -590,6 +590,206 @@ export type Database = {
           },
         ]
       }
+      mundial_matches: {
+        Row: {
+          away_goals: number | null
+          away_slot_id: string | null
+          created_at: string
+          home_goals: number | null
+          home_slot_id: string | null
+          id: string
+          mundial_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_slot_id: string | null
+        }
+        Insert: {
+          away_goals?: number | null
+          away_slot_id?: string | null
+          created_at?: string
+          home_goals?: number | null
+          home_slot_id?: string | null
+          id?: string
+          mundial_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          round: number
+          status?: string
+          wo_winner_slot_id?: string | null
+        }
+        Update: {
+          away_goals?: number | null
+          away_slot_id?: string | null
+          created_at?: string
+          home_goals?: number | null
+          home_slot_id?: string | null
+          id?: string
+          mundial_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          round?: number
+          status?: string
+          wo_winner_slot_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mundial_matches_away_slot_id_fkey"
+            columns: ["away_slot_id"]
+            isOneToOne: false
+            referencedRelation: "mundial_slots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_matches_home_slot_id_fkey"
+            columns: ["home_slot_id"]
+            isOneToOne: false
+            referencedRelation: "mundial_slots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_matches_mundial_id_fkey"
+            columns: ["mundial_id"]
+            isOneToOne: false
+            referencedRelation: "mundials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_matches_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_matches_wo_winner_slot_id_fkey"
+            columns: ["wo_winner_slot_id"]
+            isOneToOne: false
+            referencedRelation: "mundial_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mundial_slots: {
+        Row: {
+          confirmed: boolean
+          created_at: string
+          crest_url: string | null
+          edition_id: string
+          id: string
+          league_id: string
+          mundial_id: string
+          seed: number | null
+          team_name: string
+          user_id: string
+        }
+        Insert: {
+          confirmed?: boolean
+          created_at?: string
+          crest_url?: string | null
+          edition_id: string
+          id?: string
+          league_id: string
+          mundial_id: string
+          seed?: number | null
+          team_name: string
+          user_id: string
+        }
+        Update: {
+          confirmed?: boolean
+          created_at?: string
+          crest_url?: string | null
+          edition_id?: string
+          id?: string
+          league_id?: string
+          mundial_id?: string
+          seed?: number | null
+          team_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mundial_slots_edition_id_fkey"
+            columns: ["edition_id"]
+            isOneToOne: false
+            referencedRelation: "editions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_slots_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_slots_mundial_id_fkey"
+            columns: ["mundial_id"]
+            isOneToOne: false
+            referencedRelation: "mundials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundial_slots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mundials: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          id: string
+          max_slots: number | null
+          name: string
+          season_id: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          max_slots?: number | null
+          name: string
+          season_id: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          max_slots?: number | null
+          name?: string
+          season_id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mundials_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mundials_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_admins: {
         Row: {
           created_at: string
@@ -842,6 +1042,21 @@ export type Database = {
           avatar_url: string
           display_name: string
           goals: number
+          user_id: string
+        }[]
+      }
+      mundial_eligible_champions: {
+        Args: { p_mundial_id: string }
+        Returns: {
+          completed_at: string
+          crest_url: string
+          display_name: string
+          edition_id: string
+          efootball_id: string
+          league_id: string
+          league_name: string
+          slot_id: string
+          team_name: string
           user_id: string
         }[]
       }

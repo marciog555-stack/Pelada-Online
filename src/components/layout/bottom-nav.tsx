@@ -1,10 +1,11 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Trophy, CalendarRange, UserRound } from 'lucide-react'
+import { Trophy, CalendarRange, Globe, UserRound } from 'lucide-react'
 import { cn } from '#/lib/utils'
 
 const ITEMS = [
   { to: '/ligas', label: 'Ligas', icon: Trophy },
   { to: '/temporadas', label: 'Temporadas', icon: CalendarRange },
+  { to: '/mundial', label: 'Mundial', icon: Globe },
   { to: '/perfil', label: 'Perfil', icon: UserRound },
 ] as const
 
