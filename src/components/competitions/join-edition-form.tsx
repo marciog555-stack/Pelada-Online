@@ -3,15 +3,21 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { joinEditionSchema  } from '#/lib/competitions/schemas'
 import type {JoinEditionFormValues} from '#/lib/competitions/schemas';
+import type { CatalogClub } from '#/lib/competitions/team-catalog'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Alert, AlertDescription } from '#/components/ui/alert'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '#/components/ui/form'
 
 export function JoinEditionForm({
   onSubmit,
+  catalog,
+  takenTeamNames,
 }: {
   onSubmit: (values: JoinEditionFormValues) => Promise<void>
+  catalog?: CatalogClub[]
+  takenTeamNames: string[]
 }) {
   const [error, setError] = useState<string | null>(null)
 
@@ -29,6 +35,8 @@ export function JoinEditionForm({
     }
   }
 
+  const availableClubs = catalog?.filter((club) => !takenTeamNames.includes(club.name))
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 rounded-xl border border-border bg-card p-4">
@@ -40,19 +48,63 @@ export function JoinEditionForm({
           </Alert>
         )}
 
-        <FormField
-          control={form.control}
-          name="teamName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome do seu time</FormLabel>
-              <FormControl>
-                <Input placeholder="Furacão FC" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {availableClubs ? (
+          <FormField
+            control={form.control}
+            name="teamName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Escolha seu time</FormLabel>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value)
+                    const club = availableClubs.find((c) => c.name === value)
+                    if (club) form.setValue('primaryColor', club.color)
+                  }}
+                  value={field.value}
+                  disabled={availableClubs.length === 0}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder={
+                          availableClubs.length === 0 ? 'Nenhum time livre nessa liga' : 'Selecione um time'
+                        }
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {availableClubs.map((club) => (
+                      <SelectItem key={club.name} value={club.name}>
+                        {club.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {availableClubs.length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Todos os times dessa liga já foram escolhidos nessa edição.
+                  </p>
+                )}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <FormField
+            control={form.control}
+            name="teamName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome do seu time</FormLabel>
+                <FormControl>
+                  <Input placeholder="Furacão FC" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
@@ -72,7 +124,10 @@ export function JoinEditionForm({
           )}
         />
 
-        <Button type="submit" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting || (!!availableClubs && availableClubs.length === 0)}
+        >
           {form.formState.isSubmitting ? 'Entrando…' : 'Entrar'}
         </Button>
       </form>
