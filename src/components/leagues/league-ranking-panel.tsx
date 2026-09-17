@@ -1,14 +1,11 @@
+import { EmptyState } from '#/components/ui/empty-state'
 import type { Database } from '#/lib/supabase/types'
 
 type PlayerStatsRow = Database['public']['Functions']['league_player_stats']['Returns'][number]
 
 export function LeagueRankingPanel({ rows }: { rows: PlayerStatsRow[] }) {
   if (rows.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        Ranking interno: aparece quando houver partidas confirmadas.
-      </div>
-    )
+    return <EmptyState>Ranking interno: aparece quando houver partidas confirmadas.</EmptyState>
   }
 
   return (

@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Trophy } from 'lucide-react'
+import { TrophyCup } from '#/components/profile/trophy-cup'
+import { EmptyState } from '#/components/ui/empty-state'
 import type { Tables } from '#/lib/supabase/types'
 
 type Champion = { id: string; team_name: string; crest_url: string | null }
@@ -10,11 +11,7 @@ type ChampionEdition = Tables<'editions'> & {
 
 export function TrophyRoomList({ editions }: { editions: ChampionEdition[] }) {
   if (editions.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        A galeria de campeões aparece aqui quando a primeira edição terminar.
-      </div>
-    )
+    return <EmptyState>A galeria de campeões aparece aqui quando a primeira edição terminar.</EmptyState>
   }
 
   return (
@@ -28,7 +25,11 @@ export function TrophyRoomList({ editions }: { editions: ChampionEdition[] }) {
             params={{ editionId: edition.id }}
             className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 transition-colors hover:border-primary/50"
           >
-            <Trophy className="size-6 shrink-0 text-primary" />
+            <TrophyCup
+              size={28}
+              earned={!!champion}
+              className={champion ? 'shrink-0' : 'shrink-0 text-muted-foreground/40'}
+            />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">
                 {edition.competition.name} · Edição {edition.number}

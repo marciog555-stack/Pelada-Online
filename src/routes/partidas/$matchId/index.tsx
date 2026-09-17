@@ -16,6 +16,7 @@ import { confirmMatchReport, applyMatchWo, resolveContestedMatch } from '#/lib/c
 import { MatchReportForm } from '#/components/competitions/match-report-form'
 import { MatchProofImage } from '#/components/competitions/match-proof-image'
 import { MatchEventsList } from '#/components/competitions/match-events-list'
+import { ShareMatchResultCardButton } from '#/components/competitions/share-match-result-card-button'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
@@ -88,10 +89,30 @@ function PartidaContent() {
             </p>
             <TeamHeader side={match.away} />
           </div>
-          <Badge variant="outline" className="justify-self-center">
+          <Badge
+            variant={STATUS_VARIANTS[match.status] ?? 'outline'}
+            className="justify-self-center"
+          >
             {STATUS_LABELS[match.status] ?? match.status}
           </Badge>
         </div>
+
+        {(match.status === 'confirmed' || match.status === 'wo') &&
+          match.home &&
+          match.away &&
+          competition &&
+          edition &&
+          match.home_goals !== null &&
+          match.away_goals !== null && (
+            <ShareMatchResultCardButton
+              competitionName={competition.name}
+              editionNumber={edition.number}
+              home={match.home}
+              away={match.away}
+              homeGoals={match.home_goals}
+              awayGoals={match.away_goals}
+            />
+          )}
 
         {match.status === 'scheduled' && (
           <Alert>
@@ -206,6 +227,14 @@ const STATUS_LABELS: Record<string, string> = {
   contested: 'Contestado',
   confirmed: 'Confirmado',
   wo: 'W.O.',
+}
+
+const STATUS_VARIANTS: Record<string, 'warning' | 'success' | 'destructive' | 'outline'> = {
+  scheduled: 'outline',
+  pending_confirmation: 'warning',
+  contested: 'destructive',
+  confirmed: 'success',
+  wo: 'destructive',
 }
 
 function TeamHeader({ side }: { side: { team_name: string; crest_url: string | null } | null | undefined }) {

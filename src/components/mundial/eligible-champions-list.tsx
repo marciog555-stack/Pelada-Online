@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { addMundialSlot } from '#/lib/mundial/api'
 import { Button } from '#/components/ui/button'
 import { Alert, AlertDescription } from '#/components/ui/alert'
+import { EmptyState } from '#/components/ui/empty-state'
 import type { Database } from '#/lib/supabase/types'
 
 type EligibleRow = Database['public']['Functions']['mundial_eligible_champions']['Returns'][number]
@@ -43,10 +44,10 @@ export function EligibleChampionsList({
 
   if (pending.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+      <EmptyState>
         Nenhum campeão elegível pendente. Campeões aparecem aqui quando uma edição encerra dentro do período da
         temporada.
-      </div>
+      </EmptyState>
     )
   }
 

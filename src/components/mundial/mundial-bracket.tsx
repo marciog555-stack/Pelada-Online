@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '#/lib/auth/auth-provider'
 import { setMundialMatchResult, applyMundialMatchWo, advanceMundialRound } from '#/lib/mundial/api'
+import { TrophyCup } from '#/components/profile/trophy-cup'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Badge } from '#/components/ui/badge'
@@ -77,8 +78,8 @@ export function MundialBracket({
       )}
 
       {champion && (
-        <div className="grid justify-items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 p-6 text-center">
-          <p className="text-3xl">🏆</p>
+        <div className="grid justify-items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 p-6 text-center">
+          <TrophyCup size={56} earned />
           <p className="font-display text-2xl">{winnerName(champion)}</p>
           <p className="text-sm text-muted-foreground">é o campeão do Mundial</p>
         </div>
@@ -86,9 +87,12 @@ export function MundialBracket({
 
       {rounds.map((round) => (
         <div key={round} className="grid gap-2">
-          <p className="text-sm font-medium text-muted-foreground">
-            {round === lastRound && lastRoundMatches.length === 1 ? 'Final' : `Rodada ${round}`}
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="font-display text-xs tracking-wide text-muted-foreground">
+              {round === lastRound && lastRoundMatches.length === 1 ? 'FINAL' : `RODADA ${round}`}
+            </span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
           <div className="grid gap-2">
             {matches
               .filter((m) => m.round === round)
@@ -151,7 +155,7 @@ function MundialMatchRow({
         <TeamLabel side={match.away} align="right" />
       </div>
       <Badge
-        variant={match.status === 'confirmed' ? 'default' : 'outline'}
+        variant={match.status === 'confirmed' ? 'success' : 'outline'}
         className="justify-self-center"
       >
         {match.status === 'confirmed' ? 'Confirmado' : 'Agendado'}

@@ -1,15 +1,12 @@
 import { Target } from 'lucide-react'
+import { EmptyState } from '#/components/ui/empty-state'
 import type { Database } from '#/lib/supabase/types'
 
 type TopScorerRow = Database['public']['Functions']['league_top_scorers']['Returns'][number]
 
 export function LeagueTopScorersPanel({ rows }: { rows: TopScorerRow[] }) {
   if (rows.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        Artilheiros: aparece quando houver gols registrados.
-      </div>
-    )
+    return <EmptyState>Artilheiros: aparece quando houver gols registrados.</EmptyState>
   }
 
   return (

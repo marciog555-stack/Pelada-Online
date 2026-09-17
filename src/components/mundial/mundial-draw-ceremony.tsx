@@ -76,7 +76,7 @@ export function MundialDrawCeremony({
       )}
 
       <div className="grid justify-items-center gap-1 text-center">
-        <Sparkles className="size-6 text-primary" />
+        <Sparkles className="size-6 text-gold" />
         <p className="font-display text-xl">Sorteio ao vivo</p>
         <p className="text-sm text-muted-foreground">
           {phase === 'preparing' && 'Preparando o pote…'}
@@ -94,7 +94,7 @@ export function MundialDrawCeremony({
               <div
                 key={slotId}
                 className={`flex items-center gap-3 rounded-xl border p-3 transition-colors ${
-                  revealed ? 'border-primary/40 bg-primary/10' : 'border-border bg-card'
+                  revealed ? 'border-gold/40 bg-gold/10' : 'border-border bg-card'
                 }`}
               >
                 <span className="w-6 shrink-0 text-center text-sm text-muted-foreground tabular-nums">

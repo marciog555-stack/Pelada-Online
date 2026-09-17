@@ -10,6 +10,7 @@ import { EditionCard } from '#/components/competitions/edition-card'
 import { CreateEditionButton } from '#/components/competitions/create-edition-button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Badge } from '#/components/ui/badge'
+import { EmptyState } from '#/components/ui/empty-state'
 
 const PRESET_LABELS: Record<string, string> = Object.fromEntries(
   PRESET_OPTIONS.map((option) => [option.value, option.label]),
@@ -59,9 +60,7 @@ function CampeonatoContent() {
         <div className="grid gap-3">
           {loadingEditions && <Skeleton className="h-16 w-full rounded-xl" />}
           {!loadingEditions && editions?.length === 0 && (
-            <p className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              Nenhuma edição criada ainda.
-            </p>
+            <EmptyState>Nenhuma edição criada ainda.</EmptyState>
           )}
           {editions?.map((edition) => (
             <EditionCard key={edition.id} edition={edition} />

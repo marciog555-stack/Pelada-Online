@@ -6,6 +6,7 @@ import { BottomNav } from '#/components/layout/bottom-nav'
 import { useMundials } from '#/hooks/use-mundial'
 import { useIsPlatformAdmin } from '#/hooks/use-seasons'
 import { MundialCard } from '#/components/mundial/mundial-card'
+import { mundialThemeStyle } from '#/lib/mundial/theme'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
 
@@ -24,7 +25,7 @@ function MundialListContent() {
   const { data: isAdmin } = useIsPlatformAdmin()
 
   return (
-    <div className="mx-auto min-h-screen max-w-md pb-24">
+    <div className="mx-auto min-h-screen max-w-md bg-background pb-24" style={mundialThemeStyle()}>
       <AppHeader title="Mundial" />
       <div className="grid gap-4 px-4 py-6">
         <p className="text-sm text-muted-foreground">
