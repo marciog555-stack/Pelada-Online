@@ -12,6 +12,7 @@ import { CompetitionCard } from '#/components/competitions/competition-card'
 import { LeagueRankingPanel } from '#/components/leagues/league-ranking-panel'
 import { LeagueTopScorersPanel } from '#/components/leagues/league-top-scorers-panel'
 import { TrophyRoomList } from '#/components/leagues/trophy-room-list'
+import { DeleteLeagueButton } from '#/components/leagues/delete-league-button'
 import { Button } from '#/components/ui/button'
 import { EmptyState } from '#/components/ui/empty-state'
 import { Skeleton } from '#/components/ui/skeleton'
@@ -159,6 +160,8 @@ function LigaContent() {
             )}
           </TabsContent>
         </Tabs>
+
+        {membership.role === 'owner' && <DeleteLeagueButton leagueId={leagueId} leagueName={league.name} />}
       </div>
       <BottomNav />
     </div>
