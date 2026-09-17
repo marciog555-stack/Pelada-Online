@@ -370,6 +370,54 @@ export async function submitMatchReport(input: {
   return data
 }
 
+export interface MatchStatsInput {
+  possession?: number
+  shots?: number
+  shotsOnTarget?: number
+  fouls?: number
+  offsides?: number
+  corners?: number
+  freeKicks?: number
+  passes?: number
+  passesCompleted?: number
+  crosses?: number
+  interceptions?: number
+  tackles?: number
+  saves?: number
+}
+
+function statsToJson(stats: MatchStatsInput) {
+  return {
+    possession: stats.possession ?? null,
+    shots: stats.shots ?? null,
+    shots_on_target: stats.shotsOnTarget ?? null,
+    fouls: stats.fouls ?? null,
+    offsides: stats.offsides ?? null,
+    corners: stats.corners ?? null,
+    free_kicks: stats.freeKicks ?? null,
+    passes: stats.passes ?? null,
+    passes_completed: stats.passesCompleted ?? null,
+    crosses: stats.crosses ?? null,
+    interceptions: stats.interceptions ?? null,
+    tackles: stats.tackles ?? null,
+    saves: stats.saves ?? null,
+  }
+}
+
+// Estatísticas detalhadas (posse, chutes, escanteios...) são opcionais e
+// separadas do lançamento do placar - o jogador só preenche se quiser,
+// olhando a tela de fim de jogo do eFootball. Alimentam o perfil de jogo
+// (player_match_stats_summary).
+export async function submitMatchStats(matchId: string, home?: MatchStatsInput, away?: MatchStatsInput) {
+  if (!home && !away) return
+  const { error } = await supabase.rpc('submit_match_stats', {
+    p_match_id: matchId,
+    p_home_stats: home ? statsToJson(home) : null,
+    p_away_stats: away ? statsToJson(away) : null,
+  })
+  if (error) throw error
+}
+
 export async function confirmMatchReport(matchId: string) {
   const { data, error } = await supabase.rpc('confirm_match_report', { p_match_id: matchId })
   if (error) throw error
@@ -402,6 +450,27 @@ export async function applyMatchWo(matchId: string, winnerParticipantId: string)
   })
   if (error) throw error
   return data
+}
+
+// Pra quando o time pulou o passo opcional de "quem fez os gols" na
+// súmula e quer completar depois, com a partida já confirmada - só o
+// admin da liga pode (RLS de match_events só libera insert direto pra
+// admin, os jogadores só inserem via submit_match_report na hora do
+// lançamento).
+export async function addMatchEvent(input: MatchEventInput & { matchId: string }) {
+  const { error } = await supabase.from('match_events').insert({
+    match_id: input.matchId,
+    participant_id: input.participantId,
+    event_type: input.eventType,
+    athlete_name: input.athleteName,
+    assist_athlete_name: input.assistAthleteName || null,
+  })
+  if (error) throw error
+}
+
+export async function removeMatchEvent(eventId: string) {
+  const { error } = await supabase.from('match_events').delete().eq('id', eventId)
+  if (error) throw error
 }
 
 export async function closeEdition(

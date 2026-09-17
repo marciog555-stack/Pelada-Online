@@ -1,5 +1,6 @@
-import { Goal as GoalIcon, Square } from 'lucide-react'
+import { Goal as GoalIcon, Square, X } from 'lucide-react'
 import type { MatchEvent } from '#/hooks/use-competitions'
+import { Button } from '#/components/ui/button'
 
 const EVENT_ICONS = {
   goal: GoalIcon,
@@ -17,10 +18,14 @@ export function MatchEventsList({
   events,
   home,
   away,
+  isAdmin,
+  onRemove,
 }: {
   events: MatchEvent[]
   home: { id: string; team_name: string } | null
   away: { id: string; team_name: string } | null
+  isAdmin?: boolean
+  onRemove?: (eventId: string) => void
 }) {
   if (events.length === 0) return null
 
@@ -37,6 +42,17 @@ export function MatchEventsList({
               <span className="text-muted-foreground">(assist. {event.assist_athlete_name})</span>
             )}
             <span className="ml-auto text-xs text-muted-foreground">{teamName}</span>
+            {isAdmin && onRemove && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-6"
+                onClick={() => onRemove(event.id)}
+              >
+                <X className="size-3.5" />
+              </Button>
+            )}
           </div>
         )
       })}

@@ -3,8 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, useWatch } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 import { Plus, Trash2, ChevronLeft, ChevronRight } from 'lucide-react'
-import { submitMatchReport } from '#/lib/competitions/api'
-import type { MatchEventInput } from '#/lib/competitions/api'
+import { submitMatchReport, submitMatchStats } from '#/lib/competitions/api'
+import type { MatchEventInput, MatchStatsInput } from '#/lib/competitions/api'
 import { uploadMatchProof } from '#/lib/storage'
 import { matchReportSchema, EVENT_TYPE_OPTIONS } from '#/lib/competitions/schemas'
 import type { MatchReportFormValues } from '#/lib/competitions/schemas'
@@ -22,7 +22,24 @@ const STEPS = [
   { title: 'Placar', fields: ['homeGoals', 'awayGoals'] as const },
   { title: 'Cartões', fields: ['homeYellowCards', 'awayYellowCards', 'homeRedCards', 'awayRedCards'] as const },
   { title: 'Eventos', fields: [] as const },
+  { title: 'Estatísticas', fields: [] as const },
   { title: 'Comprovante', fields: [] as const },
+]
+
+const STAT_FIELDS: { key: keyof MatchStatsInput; label: string; max?: number }[] = [
+  { key: 'possession', label: 'Posse de bola (%)', max: 100 },
+  { key: 'shots', label: 'Chutes' },
+  { key: 'shotsOnTarget', label: 'Chutes a gol' },
+  { key: 'fouls', label: 'Faltas' },
+  { key: 'offsides', label: 'Impedimentos' },
+  { key: 'corners', label: 'Escanteios' },
+  { key: 'freeKicks', label: 'Cobranças de falta' },
+  { key: 'passes', label: 'Passes' },
+  { key: 'passesCompleted', label: 'Passes certos' },
+  { key: 'crosses', label: 'Cruzamentos' },
+  { key: 'interceptions', label: 'Interceptações' },
+  { key: 'tackles', label: 'Desarmes' },
+  { key: 'saves', label: 'Defesas' },
 ]
 
 export function MatchReportForm({
@@ -38,9 +55,15 @@ export function MatchReportForm({
 }) {
   const [step, setStep] = useState(0)
   const [events, setEvents] = useState<MatchEventInput[]>([])
+  const [stats, setStats] = useState<{ home: MatchStatsInput; away: MatchStatsInput }>({ home: {}, away: {} })
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+
+  function updateStat(side: 'home' | 'away', key: keyof MatchStatsInput, raw: string) {
+    const value = raw === '' ? undefined : Number(raw)
+    setStats((prev) => ({ ...prev, [side]: { ...prev[side], [key]: value } }))
+  }
 
   const form = useForm<MatchReportFormValues>({
     resolver: zodResolver(matchReportSchema),
@@ -110,6 +133,12 @@ export function MatchReportForm({
         screenshotPath,
         events,
       })
+      try {
+        await submitMatchStats(matchId, stats.home, stats.away)
+      } catch {
+        // Estatísticas são só um extra - se falhar, o resultado já foi
+        // enviado normalmente, não vale travar o jogador por isso.
+      }
       onSubmitted()
     } catch {
       setError('Não foi possível enviar o resultado. Tente de novo.')
@@ -228,6 +257,40 @@ export function MatchReportForm({
         )}
 
         {step === 3 && (
+          <div className="grid gap-2">
+            <Label>Estatísticas da partida (opcional)</Label>
+            <p className="text-sm text-muted-foreground">
+              Copie os números da tela de fim de jogo. Pode deixar em branco o que não quiser preencher.
+            </p>
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-2 gap-y-1">
+              <span className="text-right text-xs font-medium text-muted-foreground">{home.team_name}</span>
+              <span />
+              <span className="text-left text-xs font-medium text-muted-foreground">{away.team_name}</span>
+              {STAT_FIELDS.map((field) => (
+                <div key={field.key} className="contents">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={field.max}
+                    value={stats.home[field.key] ?? ''}
+                    onChange={(e) => updateStat('home', field.key, e.target.value)}
+                    className="text-right"
+                  />
+                  <span className="whitespace-nowrap text-center text-xs text-muted-foreground">{field.label}</span>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={field.max}
+                    value={stats.away[field.key] ?? ''}
+                    onChange={(e) => updateStat('away', field.key, e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
           <div className="grid gap-5">
             <MatchSummary control={form.control} home={home} away={away} eventsCount={events.length} />
 

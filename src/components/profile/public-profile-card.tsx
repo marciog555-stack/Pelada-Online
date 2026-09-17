@@ -14,6 +14,7 @@ import {
   usePlayerAchievements,
   usePlayerTitlesByPreset,
   usePlayerRecentForm,
+  usePlayerMatchStatsSummary,
 } from '#/hooks/use-profile'
 import type { Profile } from '#/hooks/use-profile'
 import { CareerSummaryCard } from '#/components/profile/career-summary-card'
@@ -22,6 +23,7 @@ import { TrophyRackCard } from '#/components/profile/trophy-rack-card'
 import { AchievementsGrid } from '#/components/profile/achievements-grid'
 import { CareerHistoryList } from '#/components/profile/career-history-list'
 import { ShareProfileCardButton } from '#/components/profile/share-profile-card-button'
+import { PlayStyleCard } from '#/components/profile/play-style-card'
 
 const PLATFORM_LABELS: Record<string, string> = Object.fromEntries(
   PLATFORM_OPTIONS.map((option) => [option.value, option.label]),
@@ -36,6 +38,7 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
   const { data: achievements } = usePlayerAchievements(profile.id)
   const { data: titlesByPreset } = usePlayerTitlesByPreset(profile.id)
   const { data: recentForm } = usePlayerRecentForm(profile.id)
+  const { data: statsSummary } = usePlayerMatchStatsSummary(profile.id)
 
   return (
     <div className="grid gap-4">
@@ -77,6 +80,7 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
       ) : summary && summary.editions_played > 0 ? (
         <>
           <CareerSummaryCard summary={summary} />
+          <PlayStyleCard summary={statsSummary} />
           <TrophyRackCard achievements={achievements} titlesByPreset={titlesByPreset} />
           <AchievementsGrid achievements={achievements} />
           <ShareProfileCardButton
@@ -89,14 +93,17 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
           <CareerHistoryList history={history} />
         </>
       ) : (
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">
-              Ainda sem histórico por aqui. As edições disputadas e as conquistas aparecem assim que{' '}
-              {profile.display_name} encerrar a primeira edição.
-            </p>
-          </CardContent>
-        </Card>
+        <>
+          <PlayStyleCard summary={statsSummary} />
+          <Card>
+            <CardContent className="pt-6">
+              <p className="text-sm text-muted-foreground">
+                Ainda sem histórico por aqui. As edições disputadas e as conquistas aparecem assim que{' '}
+                {profile.display_name} encerrar a primeira edição.
+              </p>
+            </CardContent>
+          </Card>
+        </>
       )}
     </div>
   )
