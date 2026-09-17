@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
@@ -6,87 +6,86 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Redesign visual (fase 2): base mais escura e premium, tipografia nova
-   (Space Grotesk pra numeros/placares, DM Sans pro resto), e paleta
-   reduzida de proposito - dourado fica reservado so pra conquista
-   (trofeu, titulo), nunca vira cor de botao comum. --primary continua
-   sendo "cor de acao" (verde de confirmacao/sucesso por padrao, ou a cor
-   de cada competicao quando dentro de um preset tematico via
-   preset-theme.ts). */
+/* Redesign visual v2: paleta verde-neonio/gamer inspirada em Material
+   Design 3 (dark), tipografia nova (Outfit pra numeros/placares/titulos,
+   Plus Jakarta Sans pro resto). Dourado continua reservado so pra
+   conquista (trofeu, titulo), nunca vira cor de botao comum. --primary
+   continua sendo "cor de acao" (verde neon por padrao, ou a cor de cada
+   competicao quando dentro de um preset tematico via preset-theme.ts). */
 :root {
-  --background: #05070d;
-  --foreground: #f5f7fa;
-  --card: #0b111c;
-  --card-foreground: #f5f7fa;
-  --popover: #101927;
-  --popover-foreground: #f5f7fa;
-  --primary: #22c55e;
-  --primary-foreground: #052012;
-  --secondary: #101927;
-  --secondary-foreground: #f5f7fa;
-  --muted: #101927;
-  --muted-foreground: #94a3b8;
-  --accent: #151f2e;
-  --accent-foreground: #f5f7fa;
+  --background: #10131a;
+  --foreground: #e1e2ec;
+  --card: #1d1f27;
+  --card-foreground: #e1e2ec;
+  --popover: #272a32;
+  --popover-foreground: #e1e2ec;
+  --primary: #00ff87;
+  --primary-foreground: #00210c;
+  --secondary: #272a32;
+  --secondary-foreground: #e1e2ec;
+  --muted: #191b23;
+  --muted-foreground: #b9cbb9;
+  --accent: #272a32;
+  --accent-foreground: #e1e2ec;
   --gold: #d4af37;
   --gold-foreground: #241900;
-  --success: #22c55e;
-  --success-foreground: #052012;
+  --success: #00e478;
+  --success-foreground: #002b13;
   --warning: #f59e0b;
   --warning-foreground: #241900;
-  --destructive: #ef4444;
-  --destructive-foreground: #200404;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: #101927;
-  --ring: #22c55e;
-  --chart-1: #22c55e;
+  --destructive: #93000a;
+  --destructive-foreground: #ffdad6;
+  --border: rgba(185, 203, 185, 0.14);
+  --input: #191b23;
+  --ring: #00ff87;
+  --chart-1: #00ff87;
   --chart-2: #d4af37;
-  --chart-3: #94a3b8;
-  --chart-4: #ef4444;
+  --chart-3: #b9cbb9;
+  --chart-4: #93000a;
   --chart-5: #f59e0b;
   --radius: 1rem;
-  --sidebar: #0b111c;
-  --sidebar-foreground: #f5f7fa;
-  --sidebar-primary: #22c55e;
-  --sidebar-primary-foreground: #052012;
-  --sidebar-accent: #101927;
-  --sidebar-accent-foreground: #f5f7fa;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #22c55e;
+  --sidebar: #1d1f27;
+  --sidebar-foreground: #e1e2ec;
+  --sidebar-primary: #00ff87;
+  --sidebar-primary-foreground: #00210c;
+  --sidebar-accent: #272a32;
+  --sidebar-accent-foreground: #e1e2ec;
+  --sidebar-border: rgba(185, 203, 185, 0.14);
+  --sidebar-ring: #00ff87;
 }
 
 /* Tema unico (escuro) por enquanto - clima de transmissao esportiva a noite */
 .dark {
-  --background: #05070d;
-  --foreground: #f5f7fa;
-  --card: #0b111c;
-  --card-foreground: #f5f7fa;
-  --popover: #101927;
-  --popover-foreground: #f5f7fa;
-  --primary: #22c55e;
-  --primary-foreground: #052012;
-  --secondary: #101927;
-  --secondary-foreground: #f5f7fa;
-  --muted: #101927;
-  --muted-foreground: #94a3b8;
-  --accent: #151f2e;
-  --accent-foreground: #f5f7fa;
+  --background: #10131a;
+  --foreground: #e1e2ec;
+  --card: #1d1f27;
+  --card-foreground: #e1e2ec;
+  --popover: #272a32;
+  --popover-foreground: #e1e2ec;
+  --primary: #00ff87;
+  --primary-foreground: #00210c;
+  --secondary: #272a32;
+  --secondary-foreground: #e1e2ec;
+  --muted: #191b23;
+  --muted-foreground: #b9cbb9;
+  --accent: #272a32;
+  --accent-foreground: #e1e2ec;
   --gold: #d4af37;
   --gold-foreground: #241900;
-  --success: #22c55e;
-  --success-foreground: #052012;
+  --success: #00e478;
+  --success-foreground: #002b13;
   --warning: #f59e0b;
   --warning-foreground: #241900;
-  --destructive: #ef4444;
-  --destructive-foreground: #200404;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: #101927;
-  --ring: #22c55e;
+  --destructive: #93000a;
+  --destructive-foreground: #ffdad6;
+  --border: rgba(185, 203, 185, 0.14);
+  --input: #191b23;
+  --ring: #00ff87;
 }
 
 @theme inline {
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

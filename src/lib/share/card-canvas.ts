@@ -4,15 +4,15 @@ import { initials } from '#/lib/text'
 // como cores/fontes fixas: o canvas é desenhado fora da árvore do DOM
 // tematizado, então não há CSS custom properties pra ler aqui.
 const COLORS = {
-  bgTop: '#0d1420',
-  bgBottom: '#05070d',
-  primary: '#22c55e',
-  foreground: '#f5f7fa',
-  muted: '#94a3b8',
+  bgTop: '#1a1f28',
+  bgBottom: '#10131a',
+  primary: '#00ff87',
+  foreground: '#e1e2ec',
+  muted: '#b9cbb9',
   gold: '#d4af37',
   goldLight: '#ffe08a',
   goldDark: '#b9800f',
-  card: '#0b111c',
+  card: '#1d1f27',
   border: 'rgba(212, 175, 55, 0.35)',
 }
 
@@ -31,9 +31,9 @@ async function loadImageSafe(url: string | null | undefined): Promise<HTMLImageE
 
 async function ensureFonts() {
   await Promise.all([
-    document.fonts.load('700 64px "Space Grotesk"'),
-    document.fonts.load('600 32px "DM Sans"'),
-    document.fonts.load('500 24px "DM Sans"'),
+    document.fonts.load('700 64px "Outfit"'),
+    document.fonts.load('600 32px "Plus Jakarta Sans"'),
+    document.fonts.load('500 24px "Plus Jakarta Sans"'),
   ])
   await document.fonts.ready
 }
@@ -71,7 +71,7 @@ function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: n
 
 function drawBrand(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = COLORS.primary
-  ctx.font = '600 30px "DM Sans"'
+  ctx.font = '600 30px "Plus Jakarta Sans"'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'alphabetic'
   ctx.fillText('PELADA ONLINE', SIZE / 2, 96)
@@ -102,7 +102,7 @@ function drawCircleAvatar(
     ctx.drawImage(img, cx - radius, cy - radius, radius * 2, radius * 2)
   } else {
     ctx.fillStyle = COLORS.muted
-    ctx.font = `700 ${Math.round(radius * 0.8)}px "DM Sans"`
+    ctx.font = `700 ${Math.round(radius * 0.8)}px "Plus Jakarta Sans"`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.fillText(fallbackLabel, cx, cy)
@@ -161,11 +161,11 @@ function drawTrophy(ctx: CanvasRenderingContext2D, cx: number, topY: number, sca
 
 function drawStat(ctx: CanvasRenderingContext2D, x: number, y: number, value: string, label: string) {
   ctx.fillStyle = COLORS.gold
-  ctx.font = '700 68px "Space Grotesk"'
+  ctx.font = '700 68px "Outfit"'
   ctx.textAlign = 'center'
   ctx.fillText(value, x, y)
   ctx.fillStyle = COLORS.muted
-  ctx.font = '600 22px "DM Sans"'
+  ctx.font = '600 22px "Plus Jakarta Sans"'
   ctx.fillText(label, x, y + 34)
 }
 
@@ -190,7 +190,7 @@ function wrapLabels(ctx: CanvasRenderingContext2D, labels: string[], maxWidth: n
 
 function drawFooter(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = COLORS.muted
-  ctx.font = '500 22px "DM Sans"'
+  ctx.font = '500 22px "Plus Jakarta Sans"'
   ctx.textAlign = 'center'
   ctx.fillText('pelada-online.app', SIZE / 2, SIZE - 56)
 }
@@ -222,12 +222,12 @@ export async function drawPlayerShareCard(data: PlayerCardData): Promise<HTMLCan
   drawCircleAvatar(ctx, avatar, initials(data.displayName), SIZE / 2, avatarCy, avatarRadius)
 
   ctx.fillStyle = COLORS.foreground
-  ctx.font = '700 64px "Space Grotesk"'
+  ctx.font = '700 64px "Outfit"'
   ctx.textAlign = 'center'
   ctx.fillText(data.displayName, SIZE / 2, avatarCy + avatarRadius + 80)
 
   ctx.fillStyle = COLORS.muted
-  ctx.font = '500 28px "DM Sans"'
+  ctx.font = '500 28px "Plus Jakarta Sans"'
   ctx.fillText(`@${data.efootballId}`, SIZE / 2, avatarCy + avatarRadius + 120)
 
   const statsY = avatarCy + avatarRadius + 230
@@ -235,7 +235,7 @@ export async function drawPlayerShareCard(data: PlayerCardData): Promise<HTMLCan
   drawStat(ctx, SIZE / 2 + 200, statsY, String(data.editionsPlayed), 'EDIÇÕES')
 
   if (data.achievementLabels.length > 0) {
-    ctx.font = '600 26px "DM Sans"'
+    ctx.font = '600 26px "Plus Jakarta Sans"'
     ctx.fillStyle = COLORS.gold
     ctx.textAlign = 'center'
     const lines = wrapLabels(ctx, data.achievementLabels, SIZE - 160)
@@ -272,7 +272,7 @@ export async function drawChampionShareCard(data: ChampionCardData): Promise<HTM
   drawBrand(ctx)
 
   ctx.fillStyle = COLORS.muted
-  ctx.font = '600 28px "DM Sans"'
+  ctx.font = '600 28px "Plus Jakarta Sans"'
   ctx.textAlign = 'center'
   ctx.fillText(`${data.competitionName} · Edição ${data.editionNumber}`, SIZE / 2, 190, SIZE - 120)
 
@@ -282,17 +282,17 @@ export async function drawChampionShareCard(data: ChampionCardData): Promise<HTM
   drawTrophy(ctx, SIZE / 2, 590, 1.4)
 
   ctx.fillStyle = COLORS.gold
-  ctx.font = '600 26px "DM Sans"'
+  ctx.font = '600 26px "Plus Jakarta Sans"'
   ctx.textAlign = 'center'
   ctx.fillText('CAMPEÃO', SIZE / 2, 720)
 
   ctx.fillStyle = COLORS.foreground
-  ctx.font = '700 76px "Space Grotesk"'
+  ctx.font = '700 76px "Outfit"'
   ctx.fillText(data.championTeamName, SIZE / 2, 800, SIZE - 100)
 
   if (data.runnerUpTeamName) {
     ctx.fillStyle = COLORS.muted
-    ctx.font = '500 26px "DM Sans"'
+    ctx.font = '500 26px "Plus Jakarta Sans"'
     ctx.fillText(`Vice-campeão: ${data.runnerUpTeamName}`, SIZE / 2, 850, SIZE - 120)
   }
 
@@ -328,7 +328,7 @@ export async function drawMatchResultShareCard(data: MatchResultCardData): Promi
   drawBrand(ctx)
 
   ctx.fillStyle = COLORS.muted
-  ctx.font = '600 28px "DM Sans"'
+  ctx.font = '600 28px "Plus Jakarta Sans"'
   ctx.textAlign = 'center'
   ctx.fillText(`${data.competitionName} · Edição ${data.editionNumber}`, SIZE / 2, 200, SIZE - 120)
 
@@ -338,7 +338,7 @@ export async function drawMatchResultShareCard(data: MatchResultCardData): Promi
   // Mede o placar antes de posicionar os escudos, pra garantir espaço
   // suficiente entre eles mesmo com placares de dois dígitos (ex: "12 - 9").
   const scoreText = `${data.homeGoals} - ${data.awayGoals}`
-  ctx.font = '700 88px "Space Grotesk"'
+  ctx.font = '700 88px "Outfit"'
   const scoreWidth = ctx.measureText(scoreText).width
   const crestOffset = scoreWidth / 2 + crestRadius + 40
   const homeCx = SIZE / 2 - crestOffset
@@ -347,11 +347,11 @@ export async function drawMatchResultShareCard(data: MatchResultCardData): Promi
   drawCircleAvatar(ctx, awayCrest, initials(data.awayTeamName), awayCx, crestCy, crestRadius)
 
   ctx.fillStyle = COLORS.foreground
-  ctx.font = '700 88px "Space Grotesk"'
+  ctx.font = '700 88px "Outfit"'
   ctx.textAlign = 'center'
   ctx.fillText(`${data.homeGoals} - ${data.awayGoals}`, SIZE / 2, crestCy + 34)
 
-  ctx.font = '600 32px "DM Sans"'
+  ctx.font = '600 32px "Plus Jakarta Sans"'
   ctx.fillStyle = COLORS.foreground
   ctx.fillText(data.homeTeamName, homeCx, crestCy + crestRadius + 60, 300)
   ctx.fillText(data.awayTeamName, awayCx, crestCy + crestRadius + 60, 300)
