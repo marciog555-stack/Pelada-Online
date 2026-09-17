@@ -376,6 +376,15 @@ export async function confirmMatchReport(matchId: string) {
   return data
 }
 
+// Admin confirma direto o placar já lançado, sem esperar o adversário -
+// alternativa à confirmação automática (12h) ou ao W.O. (que não confirma
+// o placar jogado, declara vencedor pelo placar padrão da edição).
+export async function adminConfirmMatchReport(matchId: string) {
+  const { data, error } = await supabase.rpc('admin_confirm_match_report', { p_match_id: matchId })
+  if (error) throw error
+  return data
+}
+
 export async function resolveContestedMatch(matchId: string, homeGoals: number, awayGoals: number) {
   const { data, error } = await supabase.rpc('resolve_contested_match', {
     p_match_id: matchId,
