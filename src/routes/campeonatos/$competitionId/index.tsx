@@ -5,6 +5,7 @@ import { BottomNav } from '#/components/layout/bottom-nav'
 import { useCompetition, useCompetitionEditions } from '#/hooks/use-competitions'
 import { useMyMembership } from '#/hooks/use-leagues'
 import { PRESET_OPTIONS } from '#/lib/competitions/schemas'
+import { presetThemeStyle } from '#/lib/competitions/preset-theme'
 import { EditionCard } from '#/components/competitions/edition-card'
 import { CreateEditionButton } from '#/components/competitions/create-edition-button'
 import { Skeleton } from '#/components/ui/skeleton'
@@ -43,7 +44,10 @@ function CampeonatoContent() {
   const nextNumber = (editions?.[0]?.number ?? 0) + 1
 
   return (
-    <div className="mx-auto min-h-screen max-w-md pb-24">
+    <div
+      className="mx-auto min-h-screen max-w-md bg-background pb-24"
+      style={presetThemeStyle(competition.preset_id)}
+    >
       <AppHeader title={competition.name} backTo={`/ligas/${competition.league_id}`} />
       <div className="grid gap-4 px-4 py-6">
         <Badge variant="outline" className="justify-self-start">

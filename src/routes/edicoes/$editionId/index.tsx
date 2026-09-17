@@ -19,6 +19,7 @@ import {
 import { joinEdition } from '#/lib/competitions/api'
 import { builtInPresets } from '#/lib/competition-engine'
 import { TEAM_CATALOG } from '#/lib/competitions/team-catalog'
+import { presetThemeStyle } from '#/lib/competitions/preset-theme'
 import { computeEditionStandings } from '#/lib/competitions/stats'
 import { EditionParticipantsPanel } from '#/components/competitions/edition-participants-panel'
 import { JoinEditionForm } from '#/components/competitions/join-edition-form'
@@ -82,7 +83,10 @@ function EdicaoContent() {
       : []
 
   return (
-    <div className="mx-auto min-h-screen max-w-md pb-24">
+    <div
+      className="mx-auto min-h-screen max-w-md bg-background pb-24"
+      style={presetThemeStyle(competition.preset_id)}
+    >
       <AppHeader title={`${competition.name} · Edição ${edition.number}`} backTo={`/campeonatos/${competition.id}`} />
       <div className="grid gap-6 px-4 py-6">
         {edition.status === 'upcoming' ? (
