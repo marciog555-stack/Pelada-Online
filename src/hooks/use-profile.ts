@@ -120,3 +120,15 @@ export function usePlayerNextMatch(userId: string | undefined) {
     },
   })
 }
+
+export function usePlayerMatchStatsSummary(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['player-match-stats-summary', userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_match_stats_summary', { p_user_id: userId! })
+      if (error) throw error
+      return data[0] ?? null
+    },
+  })
+}

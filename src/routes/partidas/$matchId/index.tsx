@@ -12,10 +12,17 @@ import {
   useEdition,
   useInvalidateMatch,
 } from '#/hooks/use-competitions'
-import { confirmMatchReport, adminConfirmMatchReport, applyMatchWo, resolveContestedMatch } from '#/lib/competitions/api'
+import {
+  confirmMatchReport,
+  adminConfirmMatchReport,
+  applyMatchWo,
+  resolveContestedMatch,
+  removeMatchEvent,
+} from '#/lib/competitions/api'
 import { MatchReportForm } from '#/components/competitions/match-report-form'
 import { MatchProofImage } from '#/components/competitions/match-proof-image'
 import { MatchEventsList } from '#/components/competitions/match-events-list'
+import { AddMatchEventForm } from '#/components/competitions/add-match-event-form'
 import { ShareMatchResultCardButton } from '#/components/competitions/share-match-result-card-button'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -129,9 +136,19 @@ function PartidaContent() {
           </Alert>
         )}
 
-        {events && events.length > 0 && (
+        {((events && events.length > 0) ||
+          (isAdmin && (match.status === 'confirmed' || match.status === 'wo'))) && (
           <>
-            <MatchEventsList events={events} home={match.home} away={match.away} />
+            <MatchEventsList
+              events={events ?? []}
+              home={match.home}
+              away={match.away}
+              isAdmin={isAdmin}
+              onRemove={(eventId) => runAction(() => removeMatchEvent(eventId))}
+            />
+            {isAdmin && (match.status === 'confirmed' || match.status === 'wo') && match.home && match.away && (
+              <AddMatchEventForm matchId={matchId} home={match.home} away={match.away} onAdded={invalidate} />
+            )}
             <Separator />
           </>
         )}

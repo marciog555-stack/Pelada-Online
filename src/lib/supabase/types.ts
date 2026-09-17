@@ -487,6 +487,81 @@ export type Database = {
           },
         ]
       }
+      match_stats: {
+        Row: {
+          corners: number | null
+          created_at: string
+          crosses: number | null
+          fouls: number | null
+          free_kicks: number | null
+          id: string
+          interceptions: number | null
+          match_id: string
+          offsides: number | null
+          participant_id: string
+          passes: number | null
+          passes_completed: number | null
+          possession: number | null
+          saves: number | null
+          shots: number | null
+          shots_on_target: number | null
+          tackles: number | null
+        }
+        Insert: {
+          corners?: number | null
+          created_at?: string
+          crosses?: number | null
+          fouls?: number | null
+          free_kicks?: number | null
+          id?: string
+          interceptions?: number | null
+          match_id: string
+          offsides?: number | null
+          participant_id: string
+          passes?: number | null
+          passes_completed?: number | null
+          possession?: number | null
+          saves?: number | null
+          shots?: number | null
+          shots_on_target?: number | null
+          tackles?: number | null
+        }
+        Update: {
+          corners?: number | null
+          created_at?: string
+          crosses?: number | null
+          fouls?: number | null
+          free_kicks?: number | null
+          id?: string
+          interceptions?: number | null
+          match_id?: string
+          offsides?: number | null
+          participant_id?: string
+          passes?: number | null
+          passes_completed?: number | null
+          possession?: number | null
+          saves?: number | null
+          shots?: number | null
+          shots_on_target?: number | null
+          tackles?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_stats_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_stats_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "edition_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matches: {
         Row: {
           away_goals: number | null
@@ -1128,6 +1203,25 @@ export type Database = {
           wins: number
         }[]
       }
+      player_match_stats_summary: {
+        Args: { p_user_id: string }
+        Returns: {
+          avg_corners: number
+          avg_crosses: number
+          avg_fouls: number
+          avg_free_kicks: number
+          avg_interceptions: number
+          avg_offsides: number
+          avg_passes: number
+          avg_possession: number
+          avg_saves: number
+          avg_shots: number
+          avg_shots_on_target: number
+          avg_tackles: number
+          matches_with_stats: number
+          pass_accuracy: number
+        }[]
+      }
       player_next_match: {
         Args: { p_user_id: string }
         Returns: {
@@ -1231,6 +1325,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      submit_match_stats: {
+        Args: { p_away_stats: Json; p_home_stats: Json; p_match_id: string }
+        Returns: undefined
       }
     }
     Enums: {
