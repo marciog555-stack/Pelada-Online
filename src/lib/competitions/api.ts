@@ -9,6 +9,7 @@ import {
 } from '#/lib/competition-engine'
 import type { Preset } from '#/lib/competition-engine/types'
 import { finishedMatches } from '#/lib/competitions/stats'
+import { generateCrestDataUri } from '#/lib/competitions/crest-generator'
 import type { TablesUpdate } from '#/lib/supabase/types'
 
 export async function createCompetition(input: {
@@ -58,7 +59,13 @@ export async function createEdition(competitionId: string, number: number) {
 export async function joinEdition(editionId: string, userId: string, teamName: string, primaryColor: string) {
   const { data, error } = await supabase
     .from('edition_participants')
-    .insert({ edition_id: editionId, user_id: userId, team_name: teamName, primary_color: primaryColor })
+    .insert({
+      edition_id: editionId,
+      user_id: userId,
+      team_name: teamName,
+      primary_color: primaryColor,
+      crest_url: generateCrestDataUri(teamName, primaryColor),
+    })
     .select()
     .single()
   if (error) throw error
