@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { MoreVertical } from 'lucide-react'
 import { approveMember, removeMember, setMemberRole } from '#/lib/leagues/api'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
@@ -75,11 +76,17 @@ export function MembersList({
           const canManage = isAdmin && m.role !== 'owner' && m.user_id !== currentUserId
           return (
             <div key={m.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
-              <MemberAvatar member={m} />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{m.profile.display_name}</p>
-                <p className="truncate text-xs text-muted-foreground">@{m.profile.efootball_id}</p>
-              </div>
+              <Link
+                to="/jogador/$efootballId"
+                params={{ efootballId: m.profile.efootball_id }}
+                className="flex min-w-0 flex-1 items-center gap-3"
+              >
+                <MemberAvatar member={m} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">{m.profile.display_name}</p>
+                  <p className="truncate text-xs text-muted-foreground">@{m.profile.efootball_id}</p>
+                </div>
+              </Link>
               <Badge variant={m.role === 'owner' ? 'default' : 'outline'}>{ROLE_LABELS[m.role]}</Badge>
               {canManage && (
                 <DropdownMenu>

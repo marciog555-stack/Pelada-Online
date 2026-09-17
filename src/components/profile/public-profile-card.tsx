@@ -1,9 +1,13 @@
+import { Link } from '@tanstack/react-router'
+import { Pencil } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
 import { Badge } from '#/components/ui/badge'
+import { Button } from '#/components/ui/button'
 import { Card, CardContent } from '#/components/ui/card'
 import { Skeleton } from '#/components/ui/skeleton'
 import { PLATFORM_OPTIONS } from '#/lib/auth/schemas'
 import { initials } from '#/lib/text'
+import { useAuth } from '#/lib/auth/auth-provider'
 import {
   usePlayerCareerSummary,
   usePlayerCareerHistory,
@@ -22,6 +26,8 @@ const PLATFORM_LABELS: Record<string, string> = Object.fromEntries(
 )
 
 export function PublicProfileCard({ profile }: { profile: Profile }) {
+  const { user } = useAuth()
+  const isOwnProfile = user?.id === profile.id
   const location = [profile.city, profile.state].filter(Boolean).join(' - ')
   const { data: summary, isLoading: loadingSummary } = usePlayerCareerSummary(profile.id)
   const { data: history } = usePlayerCareerHistory(profile.id)
@@ -47,6 +53,13 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
             <Badge variant="outline">{PLATFORM_LABELS[profile.platform] ?? profile.platform}</Badge>
             {location && <Badge variant="outline">{location}</Badge>}
           </div>
+          {isOwnProfile && (
+            <Button asChild variant="outline" size="sm">
+              <Link to="/perfil">
+                <Pencil className="size-4" /> Editar perfil
+              </Link>
+            </Button>
+          )}
         </CardContent>
       </Card>
 
