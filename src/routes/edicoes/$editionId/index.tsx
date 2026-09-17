@@ -20,13 +20,15 @@ import { joinEdition } from '#/lib/competitions/api'
 import { builtInPresets } from '#/lib/competition-engine'
 import { TEAM_CATALOG } from '#/lib/competitions/team-catalog'
 import { presetThemeStyle } from '#/lib/competitions/preset-theme'
-import { computeEditionStandings } from '#/lib/competitions/stats'
+import { computeEditionStandings, computePositionHistory } from '#/lib/competitions/stats'
 import { EditionParticipantsPanel } from '#/components/competitions/edition-participants-panel'
 import { JoinEditionForm } from '#/components/competitions/join-edition-form'
 import { MatchList } from '#/components/competitions/match-list'
 import { CrestChangeRequestsPanel } from '#/components/competitions/crest-change-requests-panel'
 import { StandingsTable } from '#/components/competitions/standings-table'
 import { EditionHighlights } from '#/components/competitions/edition-highlights'
+import { PositionEvolutionChart } from '#/components/competitions/position-evolution-chart'
+import { DownloadStandingsButton } from '#/components/competitions/download-standings-button'
 import { PlayerStatsPanel } from '#/components/competitions/player-stats-panel'
 import { EditionScorersList } from '#/components/competitions/edition-scorers-list'
 import { CloseEditionButton } from '#/components/competitions/close-edition-button'
@@ -75,7 +77,12 @@ function EdicaoContent() {
   const participantMap = new Map(
     (participants ?? []).map((p) => [p.id, { team_name: p.team_name, crest_url: p.crest_url, user_id: p.user_id }]),
   )
-  const standings = preset && matches ? computeEditionStandings(Array.from(participantMap.keys()), matches, preset) : null
+  const participantIds = Array.from(participantMap.keys())
+  const standings = preset && matches ? computeEditionStandings(participantIds, matches, preset) : null
+  const positionHistory =
+    preset && matches && myParticipant
+      ? computePositionHistory(myParticipant.id, participantIds, matches, preset)
+      : []
   const tiebreakCriteria =
     stage?.kind === 'round_robin' || stage?.kind === 'swiss'
       ? [
@@ -145,18 +152,20 @@ function EdicaoContent() {
             )}
 
             {isAdmin && edition.status === 'in_progress' && matches && preset && (
-              <CloseEditionButton
-                editionId={editionId}
-                participantIds={Array.from(participantMap.keys())}
-                matches={matches}
-                events={events ?? []}
-                preset={preset}
-                onClosed={invalidate}
-              />
+              <div className="print:hidden">
+                <CloseEditionButton
+                  editionId={editionId}
+                  participantIds={participantIds}
+                  matches={matches}
+                  events={events ?? []}
+                  preset={preset}
+                  onClosed={invalidate}
+                />
+              </div>
             )}
 
             <Tabs defaultValue="jogos">
-              <TabsList className="w-full">
+              <TabsList className="w-full print:hidden">
                 {standings && <TabsTrigger value="tabela">Tabela</TabsTrigger>}
                 <TabsTrigger value="jogos">Jogos</TabsTrigger>
                 <TabsTrigger value="artilharia">Artilharia</TabsTrigger>
@@ -173,6 +182,14 @@ function EdicaoContent() {
                     currentUserId={user?.id}
                   />
                   <EditionHighlights rows={standings} participants={participantMap} />
+                  {myParticipant && positionHistory.length >= 2 && (
+                    <PositionEvolutionChart
+                      points={positionHistory}
+                      totalParticipants={participantIds.length}
+                      teamName={myParticipant.team_name}
+                    />
+                  )}
+                  <DownloadStandingsButton />
                 </TabsContent>
               )}
 
