@@ -902,6 +902,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_confirm_match_report: {
+        Args: { p_match_id: string }
+        Returns: {
+          away_goals: number | null
+          away_participant_id: string | null
+          confirmed_at: string | null
+          created_at: string
+          deadline_at: string | null
+          edition_id: string
+          home_goals: number | null
+          home_participant_id: string | null
+          id: string
+          leg: number
+          reported_at: string | null
+          reported_by: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          round: number
+          status: string
+          wo_winner_participant_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       apply_match_wo: {
         Args: { p_match_id: string; p_winner_participant_id: string }
         Returns: {

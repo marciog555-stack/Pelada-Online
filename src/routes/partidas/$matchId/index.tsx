@@ -12,7 +12,7 @@ import {
   useEdition,
   useInvalidateMatch,
 } from '#/hooks/use-competitions'
-import { confirmMatchReport, applyMatchWo, resolveContestedMatch } from '#/lib/competitions/api'
+import { confirmMatchReport, adminConfirmMatchReport, applyMatchWo, resolveContestedMatch } from '#/lib/competitions/api'
 import { MatchReportForm } from '#/components/competitions/match-report-form'
 import { MatchProofImage } from '#/components/competitions/match-proof-image'
 import { MatchEventsList } from '#/components/competitions/match-events-list'
@@ -166,6 +166,26 @@ function PartidaContent() {
           <p className="text-center text-sm text-muted-foreground">
             Aguardando o adversário confirmar ou contestar o resultado.
           </p>
+        )}
+
+        {isAdmin && match.status === 'pending_confirmation' && (
+          <div className="grid gap-2 rounded-lg border border-border p-3">
+            <p className="text-sm font-medium">Confirmar como admin</p>
+            <p className="text-xs text-muted-foreground">
+              {latestReport
+                ? `Resultado lançado: ${latestReport.home_goals} x ${latestReport.away_goals}. `
+                : ''}
+              Se o adversário demorar pra confirmar, você pode confirmar esse placar direto (sem esperar as 12h
+              automáticas).
+            </p>
+            <Button
+              variant="outline"
+              disabled={busy}
+              onClick={() => runAction(() => adminConfirmMatchReport(matchId))}
+            >
+              Confirmar resultado (admin)
+            </Button>
+          </div>
         )}
 
         {match.status === 'contested' && reports && (
