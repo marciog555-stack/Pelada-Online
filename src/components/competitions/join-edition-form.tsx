@@ -23,7 +23,7 @@ export function JoinEditionForm({
 
   const form = useForm<JoinEditionFormValues>({
     resolver: zodResolver(joinEditionSchema),
-    defaultValues: { teamName: '', primaryColor: '#33e58c' },
+    defaultValues: { teamName: '', primaryColor: '#22c55e' },
   })
 
   async function handleSubmit(values: JoinEditionFormValues) {

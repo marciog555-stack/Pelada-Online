@@ -8,8 +8,18 @@ export const PRESET_OPTIONS = [
   { value: 'champions-league-swiss', label: 'Champions League (fase de liga, formato suíço)' },
 ] as const
 
+// Nome curto de exibição por preset - o campeonato já nasce com esse nome,
+// sem o admin ter que digitar (o formato e a identidade de cada liga real
+// já são fixos, então o nome também é).
+export const PRESET_NAMES: Record<string, string> = {
+  'brasileirao-serie-a': 'Brasileirão',
+  'mata-mata-simples': 'Mata-mata',
+  'premier-league': 'Premier League',
+  bundesliga: 'Bundesliga',
+  'champions-league-swiss': 'Champions League',
+}
+
 export const createCompetitionSchema = z.object({
-  name: z.string().trim().min(2, 'Mínimo de 2 letras').max(60, 'Máximo de 60 letras'),
   presetId: z.enum([
     'brasileirao-serie-a',
     'mata-mata-simples',

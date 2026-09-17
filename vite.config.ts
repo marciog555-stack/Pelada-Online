@@ -25,8 +25,8 @@ const config = defineConfig({
         lang: 'pt-BR',
         start_url: '/',
         display: 'standalone',
-        background_color: '#0a0e13',
-        theme_color: '#0a0e13',
+        background_color: '#05070d',
+        theme_color: '#05070d',
         icons: [
           { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
           { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },

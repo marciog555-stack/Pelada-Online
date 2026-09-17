@@ -3,11 +3,10 @@ import { useNavigate } from '@tanstack/react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { createCompetition } from '#/lib/competitions/api'
-import { createCompetitionSchema, PRESET_OPTIONS  } from '#/lib/competitions/schemas'
+import { createCompetitionSchema, PRESET_OPTIONS, PRESET_NAMES } from '#/lib/competitions/schemas'
 import type {CreateCompetitionFormValues} from '#/lib/competitions/schemas';
 import { useAuth } from '#/lib/auth/auth-provider'
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import { Alert, AlertDescription } from '#/components/ui/alert'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '#/components/ui/form'
@@ -19,7 +18,7 @@ export function CreateCompetitionForm({ leagueId }: { leagueId: string }) {
 
   const form = useForm<CreateCompetitionFormValues>({
     resolver: zodResolver(createCompetitionSchema),
-    defaultValues: { name: '', presetId: 'brasileirao-serie-a' },
+    defaultValues: { presetId: 'brasileirao-serie-a' },
   })
 
   async function onSubmit(values: CreateCompetitionFormValues) {
@@ -28,7 +27,7 @@ export function CreateCompetitionForm({ leagueId }: { leagueId: string }) {
     try {
       const competition = await createCompetition({
         leagueId,
-        name: values.name,
+        name: PRESET_NAMES[values.presetId],
         presetId: values.presetId,
         createdBy: user.id,
       })
@@ -46,20 +45,6 @@ export function CreateCompetitionForm({ leagueId }: { leagueId: string }) {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome do campeonato</FormLabel>
-              <FormControl>
-                <Input placeholder="Brasileirão da Resenha" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
