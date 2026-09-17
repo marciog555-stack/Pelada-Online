@@ -47,7 +47,7 @@ export function RedirectIfAuthed({ children }: { children: React.ReactNode }) {
   }
 
   if (status === 'signed-in') {
-    return <Navigate to="/ligas" />
+    return <Navigate to="/" />
   }
 
   return <>{children}</>
