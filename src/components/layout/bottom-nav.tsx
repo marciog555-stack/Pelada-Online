@@ -17,7 +17,7 @@ export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-background/95 backdrop-blur">
+    <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-background/95 backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-md items-center">
         {LEFT_ITEMS.map((item) => (
           <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} pathname={pathname} />

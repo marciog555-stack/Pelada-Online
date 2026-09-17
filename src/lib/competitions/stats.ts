@@ -148,6 +148,59 @@ export function computeParticipantStats(participantId: string, matches: Match[])
   }
 }
 
+export interface PositionHistoryPoint {
+  round: number
+  position: number
+}
+
+// Posição na tabela rodada a rodada - recalcula a classificação só com
+// as partidas até cada rodada disputada. Só faz sentido pra formatos com
+// tabela persistente (pontos corridos/suíço); mata-mata não tem posição
+// intermediária, então volta vazio.
+export function computePositionHistory(
+  participantId: string,
+  participantIds: string[],
+  matches: Match[],
+  preset: Preset,
+): PositionHistoryPoint[] {
+  const stage = preset.stages[0]
+  if (stage.kind !== 'round_robin' && stage.kind !== 'swiss') return []
+
+  const finishedRounds = Array.from(
+    new Set(matches.filter((m) => FINISHED_STATUSES.has(m.status)).map((m) => m.round)),
+  ).sort((a, b) => a - b)
+
+  return finishedRounds.map((round) => {
+    const upToRound = matches.filter((m) => m.round <= round)
+    const standings = computeEditionStandings(participantIds, upToRound, preset) ?? []
+    const row = standings.find((r) => r.participantId === participantId)
+    return { round, position: row?.position ?? participantIds.length }
+  })
+}
+
+// Forma recente dentro dessa edição - últimas N partidas decididas do
+// participante, mais antiga primeiro (pra desenhar da esquerda pra
+// direita como uma linha do tempo).
+export function computeRecentForm(participantId: string, matches: Match[], limit = 5): ('V' | 'E' | 'D')[] {
+  const relevant = matches
+    .filter(
+      (m) =>
+        FINISHED_STATUSES.has(m.status) &&
+        (m.home_participant_id === participantId || m.away_participant_id === participantId),
+    )
+    .sort((a, b) => a.round - b.round)
+    .slice(-limit)
+
+  return relevant.map((m) => {
+    const isHome = m.home_participant_id === participantId
+    const gf = isHome ? (m.home_goals ?? 0) : (m.away_goals ?? 0)
+    const ga = isHome ? (m.away_goals ?? 0) : (m.home_goals ?? 0)
+    if (gf > ga) return 'V'
+    if (gf < ga) return 'D'
+    return 'E'
+  })
+}
+
 export interface EditionScorerRow {
   participantId: string
   athleteName: string
