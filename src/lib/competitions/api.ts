@@ -31,6 +31,20 @@ export async function createCompetition(input: {
   return data
 }
 
+export async function deleteCompetition(competitionId: string) {
+  const { error } = await supabase.from('competitions').delete().eq('id', competitionId)
+  if (error) {
+    // 23503 = violação de FK - acontece quando alguma edição desse campeonato
+    // já teve um campeão enviado ao Mundial (mundial_slots.edition_id não
+    // tem cascade de propósito, pra preservar o histórico do Mundial mesmo
+    // se o campeonato original for apagado).
+    if (error.code === '23503') {
+      throw new Error('Esse campeonato tem uma edição com campeão registrado no Mundial e não pode ser apagado.')
+    }
+    throw error
+  }
+}
+
 export async function createEdition(competitionId: string, number: number) {
   const { data, error } = await supabase
     .from('editions')
