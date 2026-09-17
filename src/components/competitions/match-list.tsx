@@ -97,7 +97,10 @@ export function MatchList({
 
       {rounds.map((round) => (
         <div key={round} className="grid gap-2">
-          <p className="text-sm font-medium text-muted-foreground">Rodada {round}</p>
+          <div className="flex items-center gap-2">
+            <span className="font-display text-xs tracking-wide text-muted-foreground">RODADA {round}</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
           <div className="grid gap-2">
             {matches
               .filter((m) => m.round === round)
