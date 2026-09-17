@@ -13,9 +13,11 @@ import {
   usePlayerCareerHistory,
   usePlayerAchievements,
   usePlayerTitlesByPreset,
+  usePlayerRecentForm,
 } from '#/hooks/use-profile'
 import type { Profile } from '#/hooks/use-profile'
 import { CareerSummaryCard } from '#/components/profile/career-summary-card'
+import { RecentFormBadges } from '#/components/profile/recent-form-badges'
 import { TrophyRackCard } from '#/components/profile/trophy-rack-card'
 import { AchievementsGrid } from '#/components/profile/achievements-grid'
 import { CareerHistoryList } from '#/components/profile/career-history-list'
@@ -33,6 +35,7 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
   const { data: history } = usePlayerCareerHistory(profile.id)
   const { data: achievements } = usePlayerAchievements(profile.id)
   const { data: titlesByPreset } = usePlayerTitlesByPreset(profile.id)
+  const { data: recentForm } = usePlayerRecentForm(profile.id)
 
   return (
     <div className="grid gap-4">
@@ -59,6 +62,12 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
                 <Pencil className="size-4" /> Editar perfil
               </Link>
             </Button>
+          )}
+          {recentForm && recentForm.length > 0 && (
+            <div className="flex items-center justify-center gap-2 border-t border-border pt-3">
+              <p className="text-xs text-muted-foreground">Forma recente</p>
+              <RecentFormBadges form={recentForm} />
+            </div>
           )}
         </CardContent>
       </Card>

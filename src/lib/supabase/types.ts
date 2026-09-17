@@ -1100,6 +1100,36 @@ export type Database = {
           wins: number
         }[]
       }
+      player_next_match: {
+        Args: { p_user_id: string }
+        Returns: {
+          competition_id: string
+          competition_name: string
+          deadline_at: string
+          edition_id: string
+          league_id: string
+          league_name: string
+          match_id: string
+          opponent_crest_url: string
+          opponent_team_name: string
+          round: number
+          status: string
+          team_name: string
+        }[]
+      }
+      player_recent_form: {
+        Args: { p_limit?: number; p_user_id: string }
+        Returns: {
+          edition_id: string
+          goals_against: number
+          goals_for: number
+          match_id: string
+          opponent_team_name: string
+          played_at: string
+          result: string
+          team_name: string
+        }[]
+      }
       player_titles_by_preset: {
         Args: { p_user_id: string }
         Returns: {
@@ -1300,3 +1330,9 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
