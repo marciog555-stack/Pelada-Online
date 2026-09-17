@@ -28,6 +28,7 @@ import { PlayerStatsPanel } from '#/components/competitions/player-stats-panel'
 import { EditionScorersList } from '#/components/competitions/edition-scorers-list'
 import { CloseEditionButton } from '#/components/competitions/close-edition-button'
 import { EditionAwardsPanel } from '#/components/competitions/edition-awards-panel'
+import { ShareChampionCardButton } from '#/components/competitions/share-champion-card-button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
 
@@ -110,7 +111,23 @@ function EdicaoContent() {
         ) : (
           <>
             {edition.status === 'completed' && awards && awards.length > 0 && (
-              <EditionAwardsPanel awards={awards} />
+              <>
+                <EditionAwardsPanel awards={awards} />
+                {(() => {
+                  const champion = awards.find((a) => a.award_type === 'champion')
+                  const runnerUp = awards.find((a) => a.award_type === 'runner_up')
+                  if (!champion?.participant) return null
+                  return (
+                    <ShareChampionCardButton
+                      competitionName={competition.name}
+                      editionNumber={edition.number}
+                      championTeamName={champion.participant.team_name}
+                      crestUrl={champion.participant.crest_url}
+                      runnerUpTeamName={runnerUp?.participant.team_name}
+                    />
+                  )
+                })()}
+              </>
             )}
 
             {isAdmin && crestRequests && crestRequests.length > 0 && user && (

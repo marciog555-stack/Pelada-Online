@@ -48,3 +48,39 @@ export function useInvalidateOwnProfile() {
   const { user } = useAuth()
   return () => queryClient.invalidateQueries({ queryKey: ['profile', 'me', user?.id] })
 }
+
+export function usePlayerCareerSummary(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['player-career-summary', userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_career_summary', { p_user_id: userId! })
+      if (error) throw error
+      return data[0] ?? null
+    },
+  })
+}
+
+export function usePlayerCareerHistory(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['player-career-history', userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_career_history', { p_user_id: userId! })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function usePlayerAchievements(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['player-achievements', userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_achievements', { p_user_id: userId! })
+      if (error) throw error
+      return data
+    },
+  })
+}

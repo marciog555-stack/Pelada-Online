@@ -1,10 +1,15 @@
-import { Trophy } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
 import { Badge } from '#/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card'
+import { Card, CardContent } from '#/components/ui/card'
+import { Skeleton } from '#/components/ui/skeleton'
 import { PLATFORM_OPTIONS } from '#/lib/auth/schemas'
 import { initials } from '#/lib/text'
+import { usePlayerCareerSummary, usePlayerCareerHistory, usePlayerAchievements } from '#/hooks/use-profile'
 import type { Profile } from '#/hooks/use-profile'
+import { CareerSummaryCard } from '#/components/profile/career-summary-card'
+import { AchievementsGrid } from '#/components/profile/achievements-grid'
+import { CareerHistoryList } from '#/components/profile/career-history-list'
+import { ShareProfileCardButton } from '#/components/profile/share-profile-card-button'
 
 const PLATFORM_LABELS: Record<string, string> = Object.fromEntries(
   PLATFORM_OPTIONS.map((option) => [option.value, option.label]),
@@ -12,6 +17,9 @@ const PLATFORM_LABELS: Record<string, string> = Object.fromEntries(
 
 export function PublicProfileCard({ profile }: { profile: Profile }) {
   const location = [profile.city, profile.state].filter(Boolean).join(' - ')
+  const { data: summary, isLoading: loadingSummary } = usePlayerCareerSummary(profile.id)
+  const { data: history } = usePlayerCareerHistory(profile.id)
+  const { data: achievements } = usePlayerAchievements(profile.id)
 
   return (
     <div className="grid gap-4">
@@ -35,19 +43,31 @@ export function PublicProfileCard({ profile }: { profile: Profile }) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Trophy className="size-4 text-gold" /> Sala de troféus
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Ainda sem troféus por aqui. Os títulos aparecem assim que {profile.display_name} disputar e vencer um
-            campeonato.
-          </p>
-        </CardContent>
-      </Card>
+      {loadingSummary ? (
+        <Skeleton className="h-24 w-full rounded-xl" />
+      ) : summary && summary.editions_played > 0 ? (
+        <>
+          <CareerSummaryCard summary={summary} />
+          <AchievementsGrid achievements={achievements} />
+          <ShareProfileCardButton
+            displayName={profile.display_name}
+            efootballId={profile.efootball_id}
+            avatarUrl={profile.avatar_url}
+            summary={summary}
+            achievements={achievements}
+          />
+          <CareerHistoryList history={history} />
+        </>
+      ) : (
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-muted-foreground">
+              Ainda sem histórico por aqui. As edições disputadas e as conquistas aparecem assim que{' '}
+              {profile.display_name} encerrar a primeira edição.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
