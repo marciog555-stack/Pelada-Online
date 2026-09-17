@@ -13,6 +13,7 @@ import { LeagueRankingPanel } from '#/components/leagues/league-ranking-panel'
 import { LeagueTopScorersPanel } from '#/components/leagues/league-top-scorers-panel'
 import { TrophyRoomList } from '#/components/leagues/trophy-room-list'
 import { Button } from '#/components/ui/button'
+import { EmptyState } from '#/components/ui/empty-state'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs'
 
@@ -115,7 +116,7 @@ function LigaContent() {
             {loadingCompetitions && <Skeleton className="h-16 w-full rounded-xl" />}
 
             {!loadingCompetitions && competitions?.length === 0 && (
-              <EmptyState text="Nenhum campeonato criado ainda nessa liga." />
+              <EmptyState>Nenhum campeonato criado ainda nessa liga.</EmptyState>
             )}
 
             {competitions?.map((competition) => (
@@ -160,14 +161,6 @@ function LigaContent() {
         </Tabs>
       </div>
       <BottomNav />
-    </div>
-  )
-}
-
-function EmptyState({ text }: { text: string }) {
-  return (
-    <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-      {text}
     </div>
   )
 }

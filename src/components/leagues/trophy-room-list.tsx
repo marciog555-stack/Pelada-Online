@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Trophy } from 'lucide-react'
+import { EmptyState } from '#/components/ui/empty-state'
 import type { Tables } from '#/lib/supabase/types'
 
 type Champion = { id: string; team_name: string; crest_url: string | null }
@@ -10,11 +11,7 @@ type ChampionEdition = Tables<'editions'> & {
 
 export function TrophyRoomList({ editions }: { editions: ChampionEdition[] }) {
   if (editions.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        A galeria de campeões aparece aqui quando a primeira edição terminar.
-      </div>
-    )
+    return <EmptyState>A galeria de campeões aparece aqui quando a primeira edição terminar.</EmptyState>
   }
 
   return (

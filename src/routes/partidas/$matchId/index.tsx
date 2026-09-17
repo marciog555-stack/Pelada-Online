@@ -88,7 +88,10 @@ function PartidaContent() {
             </p>
             <TeamHeader side={match.away} />
           </div>
-          <Badge variant="outline" className="justify-self-center">
+          <Badge
+            variant={STATUS_VARIANTS[match.status] ?? 'outline'}
+            className="justify-self-center"
+          >
             {STATUS_LABELS[match.status] ?? match.status}
           </Badge>
         </div>
@@ -206,6 +209,14 @@ const STATUS_LABELS: Record<string, string> = {
   contested: 'Contestado',
   confirmed: 'Confirmado',
   wo: 'W.O.',
+}
+
+const STATUS_VARIANTS: Record<string, 'warning' | 'success' | 'destructive' | 'outline'> = {
+  scheduled: 'outline',
+  pending_confirmation: 'warning',
+  contested: 'destructive',
+  confirmed: 'success',
+  wo: 'destructive',
 }
 
 function TeamHeader({ side }: { side: { team_name: string; crest_url: string | null } | null | undefined }) {

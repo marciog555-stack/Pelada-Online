@@ -1,4 +1,5 @@
 import { Target } from 'lucide-react'
+import { EmptyState } from '#/components/ui/empty-state'
 import { computeEditionScorers } from '#/lib/competitions/stats'
 import type { MatchEvent } from '#/hooks/use-competitions'
 
@@ -14,11 +15,7 @@ export function EditionScorersList({
   const scorers = computeEditionScorers(events)
 
   if (scorers.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        Artilharia aparece quando houver gols registrados.
-      </div>
-    )
+    return <EmptyState>Artilharia aparece quando houver gols registrados.</EmptyState>
   }
 
   return (

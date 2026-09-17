@@ -4,6 +4,7 @@ import { setSlotConfirmed, removeMundialSlot } from '#/lib/mundial/api'
 import { Button } from '#/components/ui/button'
 import { Badge } from '#/components/ui/badge'
 import { Alert, AlertDescription } from '#/components/ui/alert'
+import { EmptyState } from '#/components/ui/empty-state'
 import type { Mundial, MundialSlot } from '#/hooks/use-mundial'
 
 export type SlotWithJoins = MundialSlot & {
@@ -60,9 +61,7 @@ export function MundialSlotsPanel({
       )}
 
       {slots.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          Nenhuma vaga adicionada ainda.
-        </div>
+        <EmptyState>Nenhuma vaga adicionada ainda.</EmptyState>
       ) : (
         <div className="grid gap-2">
           <p className="text-sm font-medium text-muted-foreground">

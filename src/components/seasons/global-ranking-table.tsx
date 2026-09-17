@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Trophy } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
+import { EmptyState } from '#/components/ui/empty-state'
 import { initials } from '#/lib/text'
 import type { Database } from '#/lib/supabase/types'
 
@@ -9,9 +10,7 @@ type RankingRow = Database['public']['Functions']['global_season_ranking']['Retu
 export function GlobalRankingTable({ rows }: { rows: RankingRow[] }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        O ranking aparece aqui quando houver edições encerradas dentro do período da temporada.
-      </div>
+      <EmptyState>O ranking aparece aqui quando houver edições encerradas dentro do período da temporada.</EmptyState>
     )
   }
 

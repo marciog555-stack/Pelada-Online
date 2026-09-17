@@ -3,11 +3,11 @@ import { Badge } from '#/components/ui/badge'
 
 type Side = { id: string; team_name: string; crest_url: string | null } | null
 
-const STATUS_LABELS: Record<string, { label: string; variant: 'secondary' | 'default' | 'destructive' | 'outline' }> = {
+const STATUS_LABELS: Record<string, { label: string; variant: 'warning' | 'success' | 'destructive' | 'outline' }> = {
   scheduled: { label: 'Agendado', variant: 'outline' },
-  pending_confirmation: { label: 'Aguardando confirmação', variant: 'secondary' },
+  pending_confirmation: { label: 'Aguardando confirmação', variant: 'warning' },
   contested: { label: 'Contestado', variant: 'destructive' },
-  confirmed: { label: 'Confirmado', variant: 'default' },
+  confirmed: { label: 'Confirmado', variant: 'success' },
   wo: { label: 'W.O.', variant: 'destructive' },
 }
 

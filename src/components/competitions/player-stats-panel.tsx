@@ -1,3 +1,4 @@
+import { EmptyState } from '#/components/ui/empty-state'
 import { computeParticipantStats } from '#/lib/competitions/stats'
 import type { Match } from '#/hooks/use-competitions'
 
@@ -16,11 +17,7 @@ export function PlayerStatsPanel({
     .sort((a, b) => b.stats.goalDifference - a.stats.goalDifference)
 
   if (stats.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        Estatísticas aparecem quando houver partidas confirmadas.
-      </div>
-    )
+    return <EmptyState>Estatísticas aparecem quando houver partidas confirmadas.</EmptyState>
   }
 
   return (
