@@ -30,7 +30,7 @@ import { EditionHighlights } from '#/components/competitions/edition-highlights'
 import { PositionEvolutionChart } from '#/components/competitions/position-evolution-chart'
 import { DownloadStandingsButton } from '#/components/competitions/download-standings-button'
 import { PlayerStatsPanel } from '#/components/competitions/player-stats-panel'
-import { EditionScorersList } from '#/components/competitions/edition-scorers-list'
+import { TopScorersPanel } from '#/components/competitions/top-scorers-panel'
 import { CloseEditionButton } from '#/components/competitions/close-edition-button'
 import { EditionAwardsPanel } from '#/components/competitions/edition-awards-panel'
 import { ShareChampionCardButton } from '#/components/competitions/share-champion-card-button'
@@ -209,7 +209,7 @@ function EdicaoContent() {
               </TabsContent>
 
               <TabsContent value="artilharia" className="pt-4">
-                <EditionScorersList events={events ?? []} participants={participantMap} />
+                <TopScorersPanel events={events ?? []} participants={participantMap} currentUserId={user?.id} />
               </TabsContent>
 
               <TabsContent value="estatisticas" className="pt-4">
