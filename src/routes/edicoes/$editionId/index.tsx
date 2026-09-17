@@ -26,6 +26,7 @@ import { JoinEditionForm } from '#/components/competitions/join-edition-form'
 import { MatchList } from '#/components/competitions/match-list'
 import { CrestChangeRequestsPanel } from '#/components/competitions/crest-change-requests-panel'
 import { StandingsTable } from '#/components/competitions/standings-table'
+import { EditionHighlights } from '#/components/competitions/edition-highlights'
 import { PlayerStatsPanel } from '#/components/competitions/player-stats-panel'
 import { EditionScorersList } from '#/components/competitions/edition-scorers-list'
 import { CloseEditionButton } from '#/components/competitions/close-edition-button'
@@ -71,7 +72,9 @@ function EdicaoContent() {
 
   const preset = builtInPresets.find((p) => p.id === competition.preset_id)
   const stage = preset?.stages[0]
-  const participantMap = new Map((participants ?? []).map((p) => [p.id, { team_name: p.team_name, crest_url: p.crest_url }]))
+  const participantMap = new Map(
+    (participants ?? []).map((p) => [p.id, { team_name: p.team_name, crest_url: p.crest_url, user_id: p.user_id }]),
+  )
   const standings = preset && matches ? computeEditionStandings(Array.from(participantMap.keys()), matches, preset) : null
   const tiebreakCriteria =
     stage?.kind === 'round_robin' || stage?.kind === 'swiss'
@@ -161,8 +164,15 @@ function EdicaoContent() {
               </TabsList>
 
               {standings && (
-                <TabsContent value="tabela" className="pt-4">
-                  <StandingsTable rows={standings} participants={participantMap} criteria={tiebreakCriteria} />
+                <TabsContent value="tabela" className="grid gap-6 pt-4">
+                  <StandingsTable
+                    rows={standings}
+                    participants={participantMap}
+                    criteria={tiebreakCriteria}
+                    matches={matches ?? []}
+                    currentUserId={user?.id}
+                  />
+                  <EditionHighlights rows={standings} participants={participantMap} />
                 </TabsContent>
               )}
 

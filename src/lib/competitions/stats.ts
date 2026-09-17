@@ -148,6 +148,29 @@ export function computeParticipantStats(participantId: string, matches: Match[])
   }
 }
 
+// Forma recente dentro dessa edição - últimas N partidas decididas do
+// participante, mais antiga primeiro (pra desenhar da esquerda pra
+// direita como uma linha do tempo).
+export function computeRecentForm(participantId: string, matches: Match[], limit = 5): ('V' | 'E' | 'D')[] {
+  const relevant = matches
+    .filter(
+      (m) =>
+        FINISHED_STATUSES.has(m.status) &&
+        (m.home_participant_id === participantId || m.away_participant_id === participantId),
+    )
+    .sort((a, b) => a.round - b.round)
+    .slice(-limit)
+
+  return relevant.map((m) => {
+    const isHome = m.home_participant_id === participantId
+    const gf = isHome ? (m.home_goals ?? 0) : (m.away_goals ?? 0)
+    const ga = isHome ? (m.away_goals ?? 0) : (m.home_goals ?? 0)
+    if (gf > ga) return 'V'
+    if (gf < ga) return 'D'
+    return 'E'
+  })
+}
+
 export interface EditionScorerRow {
   participantId: string
   athleteName: string
