@@ -16,14 +16,10 @@ import { MundialSlotsPanel } from '#/components/mundial/mundial-slots-panel'
 import type { SlotWithJoins } from '#/components/mundial/mundial-slots-panel'
 import { MundialDrawCeremony } from '#/components/mundial/mundial-draw-ceremony'
 import { MundialBracket } from '#/components/mundial/mundial-bracket'
+import { MUNDIAL_STATUS_META } from '#/components/mundial/mundial-card'
+import { mundialThemeStyle } from '#/lib/mundial/theme'
 import { Badge } from '#/components/ui/badge'
 import { Skeleton } from '#/components/ui/skeleton'
-
-const STATUS_LABELS: Record<string, string> = {
-  open: 'Vagas abertas',
-  in_progress: 'Em andamento',
-  completed: 'Encerrado',
-}
 
 export const Route = createFileRoute('/mundial/$mundialId/')({ component: MundialPage })
 
@@ -53,12 +49,14 @@ function MundialContent() {
     )
   }
 
+  const status = MUNDIAL_STATUS_META[mundial.status] ?? MUNDIAL_STATUS_META.open
+
   return (
-    <div className="mx-auto min-h-screen max-w-md pb-24">
+    <div className="mx-auto min-h-screen max-w-md bg-background pb-24" style={mundialThemeStyle()}>
       <AppHeader title={mundial.name} backTo="/mundial" />
       <div className="grid gap-4 px-4 py-6">
-        <Badge variant="outline" className="justify-self-start">
-          {STATUS_LABELS[mundial.status]}
+        <Badge variant={status.variant} className="justify-self-start">
+          {status.label}
         </Badge>
 
         {mundial.status === 'open' && drawSlots ? (
