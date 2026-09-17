@@ -84,3 +84,15 @@ export function usePlayerAchievements(userId: string | undefined) {
     },
   })
 }
+
+export function usePlayerTitlesByPreset(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['player-titles-by-preset', userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_titles_by_preset', { p_user_id: userId! })
+      if (error) throw error
+      return data
+    },
+  })
+}
