@@ -1100,6 +1100,14 @@ export type Database = {
           wins: number
         }[]
       }
+      player_titles_by_preset: {
+        Args: { p_user_id: string }
+        Returns: {
+          last_at: string
+          preset_id: string
+          title_count: number
+        }[]
+      }
       resolve_contested_match: {
         Args: { p_away_goals: number; p_home_goals: number; p_match_id: string }
         Returns: {
