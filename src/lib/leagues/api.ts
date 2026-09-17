@@ -69,6 +69,20 @@ export async function regenerateInviteCode(leagueId: string) {
   return data.invite_code
 }
 
+export async function deleteLeague(leagueId: string) {
+  const { error } = await supabase.from('leagues').delete().eq('id', leagueId)
+  if (error) {
+    // 23503 = violação de FK - acontece quando algum campeão dessa liga já
+    // foi enviado pro Mundial (mundial_slots.league_id não tem cascade de
+    // propósito, pra preservar o histórico do Mundial mesmo se a liga
+    // original for apagada).
+    if (error.code === '23503') {
+      throw new Error('Essa liga tem um campeão registrado no Mundial e não pode ser apagada.')
+    }
+    throw error
+  }
+}
+
 export async function updateLeagueSettings(
   leagueId: string,
   updates: { name?: string; description?: string | null; requireApproval?: boolean },
