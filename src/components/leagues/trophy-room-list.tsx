@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Trophy } from 'lucide-react'
+import { TrophyCup } from '#/components/profile/trophy-cup'
 import { EmptyState } from '#/components/ui/empty-state'
 import type { Tables } from '#/lib/supabase/types'
 
@@ -25,7 +25,11 @@ export function TrophyRoomList({ editions }: { editions: ChampionEdition[] }) {
             params={{ editionId: edition.id }}
             className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 transition-colors hover:border-primary/50"
           >
-            <Trophy className="size-6 shrink-0 text-primary" />
+            <TrophyCup
+              size={28}
+              earned={!!champion}
+              className={champion ? 'shrink-0' : 'shrink-0 text-muted-foreground/40'}
+            />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">
                 {edition.competition.name} · Edição {edition.number}
