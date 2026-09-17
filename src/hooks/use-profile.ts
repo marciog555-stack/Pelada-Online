@@ -96,3 +96,27 @@ export function usePlayerTitlesByPreset(userId: string | undefined) {
     },
   })
 }
+
+export function usePlayerRecentForm(userId: string | undefined, limit = 5) {
+  return useQuery({
+    queryKey: ['player-recent-form', userId, limit],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_recent_form', { p_user_id: userId!, p_limit: limit })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function usePlayerNextMatch(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['player-next-match', userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('player_next_match', { p_user_id: userId! })
+      if (error) throw error
+      return data[0] ?? null
+    },
+  })
+}

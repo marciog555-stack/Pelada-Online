@@ -1,13 +1,20 @@
 import { createFileRoute, Navigate, Link } from '@tanstack/react-router'
 import { Loader2, Plus, ChevronRight } from 'lucide-react'
 import { useAuth } from '#/lib/auth/auth-provider'
-import { useOwnProfile, usePlayerCareerSummary } from '#/hooks/use-profile'
+import {
+  useOwnProfile,
+  usePlayerCareerSummary,
+  usePlayerNextMatch,
+  usePlayerRecentForm,
+} from '#/hooks/use-profile'
 import { useMyLeagues } from '#/hooks/use-leagues'
 import { useMundials } from '#/hooks/use-mundial'
 import { BottomNav } from '#/components/layout/bottom-nav'
 import { LeagueCard } from '#/components/leagues/league-card'
 import { MundialCard } from '#/components/mundial/mundial-card'
 import { CareerSummaryCard } from '#/components/profile/career-summary-card'
+import { MatchSpotlightCard } from '#/components/profile/match-spotlight-card'
+import { RecentFormBadges } from '#/components/profile/recent-form-badges'
 import { Button } from '#/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
 import { EmptyState } from '#/components/ui/empty-state'
@@ -40,6 +47,8 @@ function HomeContent() {
   const { data: memberships, isLoading: loadingLeagues } = useMyLeagues()
   const { data: mundials } = useMundials()
   const { data: careerSummary } = usePlayerCareerSummary(user?.id)
+  const { data: recentForm } = usePlayerRecentForm(user?.id)
+  const { data: nextMatch } = usePlayerNextMatch(user?.id)
 
   const activeLeagues = (memberships ?? []).filter((m) => m.status === 'active')
   const featuredMundial = mundials?.find((m) => m.status !== 'completed')
@@ -50,6 +59,12 @@ function HomeContent() {
         <div className="min-w-0">
           <p className="text-sm text-muted-foreground">Bem-vindo de volta</p>
           <p className="truncate font-display text-2xl">{profile?.display_name ?? 'Jogador'}</p>
+          {recentForm && recentForm.length > 0 && (
+            <div className="mt-2 flex items-center gap-2">
+              <p className="text-[11px] text-muted-foreground">Forma recente</p>
+              <RecentFormBadges form={recentForm} />
+            </div>
+          )}
         </div>
         <Link to="/perfil" className="shrink-0">
           <Avatar className="size-11 border border-border">
@@ -60,6 +75,13 @@ function HomeContent() {
       </header>
 
       <div className="grid gap-6 px-4">
+        {nextMatch && (
+          <section className="grid gap-2">
+            <p className="text-sm font-medium text-muted-foreground">Sua próxima partida</p>
+            <MatchSpotlightCard match={nextMatch} />
+          </section>
+        )}
+
         {careerSummary && careerSummary.editions_played > 0 && <CareerSummaryCard summary={careerSummary} />}
 
         {featuredMundial && (
