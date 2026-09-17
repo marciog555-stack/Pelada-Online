@@ -8,6 +8,7 @@ import { PRESET_OPTIONS } from '#/lib/competitions/schemas'
 import { presetThemeStyle } from '#/lib/competitions/preset-theme'
 import { EditionCard } from '#/components/competitions/edition-card'
 import { CreateEditionButton } from '#/components/competitions/create-edition-button'
+import { DeleteCompetitionButton } from '#/components/competitions/delete-competition-button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Badge } from '#/components/ui/badge'
 import { EmptyState } from '#/components/ui/empty-state'
@@ -66,6 +67,14 @@ function CampeonatoContent() {
             <EditionCard key={edition.id} edition={edition} />
           ))}
         </div>
+
+        {isAdmin && (
+          <DeleteCompetitionButton
+            competitionId={competitionId}
+            competitionName={competition.name}
+            leagueId={competition.league_id}
+          />
+        )}
       </div>
       <BottomNav />
     </div>
