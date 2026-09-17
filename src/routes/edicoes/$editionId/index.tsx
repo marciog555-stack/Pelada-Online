@@ -18,6 +18,7 @@ import {
 } from '#/hooks/use-competitions'
 import { joinEdition } from '#/lib/competitions/api'
 import { builtInPresets } from '#/lib/competition-engine'
+import { TEAM_CATALOG } from '#/lib/competitions/team-catalog'
 import { computeEditionStandings } from '#/lib/competitions/stats'
 import { EditionParticipantsPanel } from '#/components/competitions/edition-participants-panel'
 import { JoinEditionForm } from '#/components/competitions/join-edition-form'
@@ -88,6 +89,8 @@ function EdicaoContent() {
           <>
             {!myParticipant && membership?.status === 'active' && (
               <JoinEditionForm
+                catalog={TEAM_CATALOG[competition.preset_id]}
+                takenTeamNames={(participants ?? []).map((p) => p.team_name)}
                 onSubmit={async (values) => {
                   await joinEdition(editionId, user!.id, values.teamName, values.primaryColor)
                   invalidate()
