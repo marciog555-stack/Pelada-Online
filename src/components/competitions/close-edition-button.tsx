@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from '#/components/ui/alert'
 
 export function CloseEditionButton({
   editionId,
-  isKnockout,
   participantIds,
   matches,
   events,
@@ -16,7 +15,6 @@ export function CloseEditionButton({
   onClosed,
 }: {
   editionId: string
-  isKnockout: boolean
   participantIds: string[]
   matches: Match[]
   events: MatchEvent[]
@@ -26,14 +24,14 @@ export function CloseEditionButton({
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const eligible = isEditionReadyToClose(isKnockout, matches)
+  const eligible = isEditionReadyToClose(preset, matches)
   if (!eligible) return null
 
   async function handleClose() {
     setBusy(true)
     setError(null)
     try {
-      const { finalPositions, awards } = buildEditionClosure(isKnockout, participantIds, matches, events, preset)
+      const { finalPositions, awards } = buildEditionClosure(participantIds, matches, events, preset)
       await closeEdition(editionId, finalPositions, awards)
       onClosed()
     } catch {
@@ -57,13 +55,20 @@ export function CloseEditionButton({
   )
 }
 
-function isEditionReadyToClose(isKnockout: boolean, matches: Match[]): boolean {
+function isEditionReadyToClose(preset: Preset, matches: Match[]): boolean {
   if (matches.length === 0) return false
   const allDone = matches.every((m) => m.status === 'confirmed' || m.status === 'wo')
   if (!allDone) return false
-  if (!isKnockout) return true
 
+  const stage = preset.stages[0]
   const rounds = Array.from(new Set(matches.map((m) => m.round))).sort((a, b) => a - b)
   const lastRound = rounds[rounds.length - 1]
-  return matches.filter((m) => m.round === lastRound).length === 1
+
+  if (stage.kind === 'knockout') {
+    return matches.filter((m) => m.round === lastRound).length === 1
+  }
+  if (stage.kind === 'swiss') {
+    return lastRound >= stage.rounds
+  }
+  return true
 }

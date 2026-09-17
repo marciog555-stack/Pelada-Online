@@ -3,11 +3,20 @@ import { z } from 'zod'
 export const PRESET_OPTIONS = [
   { value: 'brasileirao-serie-a', label: 'Brasileirão (pontos corridos)' },
   { value: 'mata-mata-simples', label: 'Mata-mata simples' },
+  { value: 'premier-league', label: 'Premier League (pontos corridos, ida e volta)' },
+  { value: 'bundesliga', label: 'Bundesliga (pontos corridos, ida e volta)' },
+  { value: 'champions-league-swiss', label: 'Champions League (fase de liga, formato suíço)' },
 ] as const
 
 export const createCompetitionSchema = z.object({
   name: z.string().trim().min(2, 'Mínimo de 2 letras').max(60, 'Máximo de 60 letras'),
-  presetId: z.enum(['brasileirao-serie-a', 'mata-mata-simples']),
+  presetId: z.enum([
+    'brasileirao-serie-a',
+    'mata-mata-simples',
+    'premier-league',
+    'bundesliga',
+    'champions-league-swiss',
+  ]),
 })
 
 export type CreateCompetitionFormValues = z.infer<typeof createCompetitionSchema>

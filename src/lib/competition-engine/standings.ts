@@ -93,12 +93,23 @@ function scoreForCriterion(
       return -row.redCards
     case 'fewer_yellow_cards':
       return -row.yellowCards
+    case 'away_wins':
+      return row.awayWins
+    case 'away_goals_for':
+      return row.awayGoalsFor
+    // Pontos de fair play: fórmula padrão (1 por amarelo, 3 por vermelho) -
+    // menos é melhor, por isso o sinal invertido igual aos critérios de
+    // "menos cartão" acima.
+    case 'fair_play_points':
+      return -(row.yellowCards + row.redCards * 3)
     case 'head_to_head_points':
       return h2hStats!.get(row.participantId)!.points
     case 'head_to_head_goal_difference':
       return h2hStats!.get(row.participantId)!.goalDifference
     case 'head_to_head_goals_for':
       return h2hStats!.get(row.participantId)!.goalsFor
+    case 'head_to_head_away_goals':
+      return h2hStats!.get(row.participantId)!.awayGoalsFor
     case 'draw_lots':
       return random()
   }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { advanceKnockoutRound } from '#/lib/competitions/api'
+import { advanceKnockoutRound, advanceSwissRound } from '#/lib/competitions/api'
+import type { Preset } from '#/lib/competition-engine/types'
 import { MatchCard } from '#/components/competitions/match-card'
 import { Button } from '#/components/ui/button'
 import { Alert, AlertDescription } from '#/components/ui/alert'
@@ -26,14 +27,14 @@ function championName(match: MatchWithSides): string | undefined {
 
 export function MatchList({
   matches,
-  isKnockout,
+  preset,
   isAdmin,
   editionId,
   roundDeadlineDays,
   onChanged,
 }: {
   matches: MatchWithSides[]
-  isKnockout: boolean
+  preset: Preset
   isAdmin: boolean
   editionId: string
   roundDeadlineDays: number
@@ -43,17 +44,28 @@ export function MatchList({
   const [error, setError] = useState<string | null>(null)
   const [finished, setFinished] = useState(false)
 
+  const stage = preset.stages[0]
+  const isKnockout = stage.kind === 'knockout'
+  const isSwiss = stage.kind === 'swiss'
+
   const rounds = Array.from(new Set(matches.map((m) => m.round))).sort((a, b) => a - b)
   const lastRound = rounds[rounds.length - 1]
   const lastRoundMatches = matches.filter((m) => m.round === lastRound)
   const lastRoundDone = lastRoundMatches.every((m) => m.status === 'confirmed' || m.status === 'wo')
   const champion = isKnockout && lastRoundMatches.length === 1 && lastRoundDone ? lastRoundMatches[0] : null
 
+  const swissRoundsTotal = stage.kind === 'swiss' ? stage.rounds : null
+  const swissFinished = swissRoundsTotal !== null && lastRound >= swissRoundsTotal
+
+  const canAdvance = (isKnockout || isSwiss) && isAdmin && lastRoundDone && !champion && !swissFinished && !finished
+
   async function handleAdvance() {
     setBusy(true)
     setError(null)
     try {
-      const result = await advanceKnockoutRound(editionId, roundDeadlineDays)
+      const result = isKnockout
+        ? await advanceKnockoutRound(editionId, roundDeadlineDays)
+        : await advanceSwissRound(editionId, roundDeadlineDays, preset)
       if (result.finished) setFinished(true)
       onChanged()
     } catch {
@@ -71,7 +83,7 @@ export function MatchList({
         </Alert>
       )}
 
-      {isKnockout && isAdmin && lastRoundDone && !champion && !finished && (
+      {canAdvance && (
         <Button onClick={handleAdvance} disabled={busy} variant="secondary">
           {busy ? 'Gerando…' : 'Avançar para a próxima rodada'}
         </Button>

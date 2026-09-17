@@ -1,5 +1,14 @@
 import { supabase } from '#/lib/supabase/client'
-import { builtInPresets, generateFirstRoundPairings, generateRoundRobinSchedule } from '#/lib/competition-engine'
+import {
+  builtInPresets,
+  generateFirstRoundPairings,
+  generateRoundRobinSchedule,
+  generateSwissRoundPairings,
+  computeStandings,
+  pairKey,
+} from '#/lib/competition-engine'
+import type { Preset } from '#/lib/competition-engine/types'
+import { finishedMatches } from '#/lib/competitions/stats'
 import type { TablesUpdate } from '#/lib/supabase/types'
 
 export async function createCompetition(input: {
@@ -126,6 +135,20 @@ export async function startEdition(
       status: 'scheduled',
       confirmed_at: null,
     }))
+  } else if (stage.kind === 'swiss') {
+    const pairings = generateSwissRoundPairings(participantIds, new Set(), new Map(), 1, new Set())
+    rows = pairings.map((pairing) => {
+      const isBye = pairing.participantB === null
+      return {
+        edition_id: edition.id,
+        round: 1,
+        home_participant_id: pairing.homeIsA ? pairing.participantA : pairing.participantB,
+        away_participant_id: pairing.homeIsA ? pairing.participantB : pairing.participantA,
+        deadline_at: isBye ? null : deadlineFor(1),
+        status: isBye ? 'confirmed' : 'scheduled',
+        confirmed_at: isBye ? startedAt.toISOString() : null,
+      }
+    })
   } else {
     const pairings = generateFirstRoundPairings(participantIds)
     rows = pairings.map((pairing) => {
@@ -201,6 +224,86 @@ export async function advanceKnockoutRound(editionId: string, roundDeadlineDays:
       deadline_at: deadline,
     })
   }
+
+  const { error: insertError } = await supabase.from('matches').insert(rows)
+  if (insertError) throw insertError
+
+  return { finished: false as const }
+}
+
+// Só usado no formato suíço: quando a rodada atual termina, reclassifica
+// pela tabela até ali (pontos corridos) e pareia a próxima rodada evitando
+// adversários repetidos, balanceando mandante/fora. Termina sem gerar nova
+// rodada quando já rodou o número de rodadas do preset.
+export async function advanceSwissRound(editionId: string, roundDeadlineDays: number, preset: Preset) {
+  const stage = preset.stages[0]
+  if (stage.kind !== 'swiss') throw new Error('not_a_swiss_stage')
+
+  const { data: edition, error: editionError } = await supabase
+    .from('editions')
+    .select('started_at')
+    .eq('id', editionId)
+    .single()
+  if (editionError) throw editionError
+
+  const { data: matches, error: matchesError } = await supabase
+    .from('matches')
+    .select('*')
+    .eq('edition_id', editionId)
+    .order('round', { ascending: false })
+    .limit(1000)
+  if (matchesError) throw matchesError
+  if (matches.length === 0) throw new Error('no_matches')
+
+  const currentRound = matches.reduce((max, m) => Math.max(max, m.round), 0)
+  const roundMatches = matches.filter((m) => m.round === currentRound)
+
+  const unresolved = roundMatches.filter((m) => m.status !== 'confirmed' && m.status !== 'wo')
+  if (unresolved.length > 0) throw new Error('round_not_finished')
+
+  if (currentRound >= stage.rounds) return { finished: true as const }
+
+  const participantIds = Array.from(
+    new Set(matches.flatMap((m) => [m.home_participant_id, m.away_participant_id]).filter((id): id is string => id !== null)),
+  )
+
+  const standings = computeStandings(participantIds, finishedMatches(matches), {
+    pointsSystem: stage.pointsSystem,
+    tiebreakCriteria: stage.tiebreakCriteria,
+    headToHeadOnlyForPairs: stage.headToHeadOnlyForPairs,
+  })
+  const standingsOrder = standings.map((row) => row.participantId)
+
+  const playedPairs = new Set<string>()
+  const homeCounts = new Map<string, number>()
+  const byeHistory = new Set<string>()
+  for (const m of matches) {
+    if (m.home_participant_id === null) continue
+    if (m.away_participant_id === null) {
+      byeHistory.add(m.home_participant_id)
+    } else {
+      homeCounts.set(m.home_participant_id, (homeCounts.get(m.home_participant_id) ?? 0) + 1)
+      playedPairs.add(pairKey(m.home_participant_id, m.away_participant_id))
+    }
+  }
+
+  const nextRound = currentRound + 1
+  const startedAt = edition.started_at ? new Date(edition.started_at) : new Date()
+  const deadline = new Date(startedAt.getTime() + nextRound * roundDeadlineDays * ROUND_DEADLINE_MS).toISOString()
+
+  const pairings = generateSwissRoundPairings(standingsOrder, playedPairs, homeCounts, nextRound, byeHistory)
+  const rows = pairings.map((pairing) => {
+    const isBye = pairing.participantB === null
+    return {
+      edition_id: editionId,
+      round: nextRound,
+      home_participant_id: pairing.homeIsA ? pairing.participantA : pairing.participantB,
+      away_participant_id: pairing.homeIsA ? pairing.participantB : pairing.participantA,
+      deadline_at: isBye ? null : deadline,
+      status: isBye ? 'confirmed' : 'scheduled',
+      confirmed_at: isBye ? new Date().toISOString() : null,
+    }
+  })
 
   const { error: insertError } = await supabase.from('matches').insert(rows)
   if (insertError) throw insertError

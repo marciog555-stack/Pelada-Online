@@ -33,7 +33,7 @@ export function computeEditionStandings(
   preset: Preset,
 ): RankedStandingRow[] | null {
   const stage = preset.stages[0]
-  if (stage.kind !== 'round_robin') return null
+  if (stage.kind !== 'round_robin' && stage.kind !== 'swiss') return null
 
   return computeStandings(participantIds, finishedMatches(matches), {
     pointsSystem: stage.pointsSystem,
@@ -52,6 +52,10 @@ export const TIEBREAK_LABELS: Record<TiebreakCriterionName, string> = {
   head_to_head_goals_for: 'Confronto direto (gols marcados)',
   fewer_red_cards: 'Menos cartões vermelhos',
   fewer_yellow_cards: 'Menos cartões amarelos',
+  away_wins: 'Vitórias fora de casa',
+  away_goals_for: 'Gols marcados fora de casa',
+  head_to_head_away_goals: 'Confronto direto (gols fora de casa)',
+  fair_play_points: 'Fair play (menos cartões)',
   draw_lots: 'Sorteio',
 }
 
@@ -228,10 +232,9 @@ export interface EditionClosure {
 
 // Monta tudo que close_edition precisa gravar: a colocação final de cada
 // participante e as premiações automáticas (campeão, vice, artilheiro(s)
-// da edição e, só em pontos corridos, defesa menos vazada). Empates nos
-// prêmios de artilharia/defesa premiam todo mundo empatado.
+// da edição e, em pontos corridos/suíço, defesa menos vazada). Empates
+// nos prêmios de artilharia/defesa premiam todo mundo empatado.
 export function buildEditionClosure(
-  isKnockout: boolean,
   participantIds: string[],
   matches: Match[],
   events: MatchEvent[],
@@ -242,7 +245,7 @@ export function buildEditionClosure(
   let championId: string | undefined
   let runnerUpId: string | undefined
 
-  if (isKnockout) {
+  if (preset.stages[0].kind === 'knockout') {
     const positions = computeKnockoutFinalPositions(participantIds, matches)
     finalPositions = participantIds
       .filter((id) => positions.has(id))

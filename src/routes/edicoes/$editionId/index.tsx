@@ -66,14 +66,12 @@ function EdicaoContent() {
     )
   }
 
-  const isKnockout = competition.preset_id === 'mata-mata-simples'
   const preset = builtInPresets.find((p) => p.id === competition.preset_id)
-  const participantMap = new Map((participants ?? []).map((p) => [p.id, { team_name: p.team_name, crest_url: p.crest_url }]))
-  const standings =
-    !isKnockout && preset && matches ? computeEditionStandings(Array.from(participantMap.keys()), matches, preset) : null
   const stage = preset?.stages[0]
+  const participantMap = new Map((participants ?? []).map((p) => [p.id, { team_name: p.team_name, crest_url: p.crest_url }]))
+  const standings = preset && matches ? computeEditionStandings(Array.from(participantMap.keys()), matches, preset) : null
   const tiebreakCriteria =
-    stage?.kind === 'round_robin'
+    stage?.kind === 'round_robin' || stage?.kind === 'swiss'
       ? [
           'points' as const,
           ...stage.tiebreakCriteria,
@@ -122,7 +120,6 @@ function EdicaoContent() {
             {isAdmin && edition.status === 'in_progress' && matches && preset && (
               <CloseEditionButton
                 editionId={editionId}
-                isKnockout={isKnockout}
                 participantIds={Array.from(participantMap.keys())}
                 matches={matches}
                 events={events ?? []}
@@ -146,12 +143,12 @@ function EdicaoContent() {
               )}
 
               <TabsContent value="jogos" className="pt-4">
-                {loadingMatches || !matches ? (
+                {loadingMatches || !matches || !preset ? (
                   <Skeleton className="h-24 w-full rounded-xl" />
                 ) : (
                   <MatchList
                     matches={matches}
-                    isKnockout={isKnockout}
+                    preset={preset}
                     isAdmin={isAdmin}
                     editionId={editionId}
                     roundDeadlineDays={edition.round_deadline_days}
